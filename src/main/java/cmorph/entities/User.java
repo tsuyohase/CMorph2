@@ -1,4 +1,4 @@
-package main.java.cmorph.entities;
+package cmorph.entities;
 
 public class User {
 

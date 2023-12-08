@@ -1,4 +1,4 @@
-package main.java.cmorph.cost;
+package cmorph.cost;
 
 public class PseudoCostFunctions {
 

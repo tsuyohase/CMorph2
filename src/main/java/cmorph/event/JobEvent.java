@@ -1,4 +1,4 @@
-package main.java.cmorph.event;
+package cmorph.event;
 
 public class JobEvent {
 

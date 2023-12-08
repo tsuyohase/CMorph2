@@ -1,5 +1,5 @@
 package cmorph.simulator;
 
-public class Simulator {
+public class Setup {
 
 }

@@ -1,4 +1,4 @@
-package main.java.cmorph.simulator;
+package cmorph.simulator;
 
 public class Timer {
 

@@ -1,4 +1,4 @@
-package main.java.cmorph.job;
+package cmorph.job;
 
 public class Job {
 
