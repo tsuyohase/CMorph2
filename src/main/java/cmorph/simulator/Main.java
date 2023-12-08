@@ -1,6 +1,10 @@
 package cmorph.simulator;
 
+import java.util.Random;
+
 public class Main {
+    public static Random random = new Random();
+
     /**
      * Main 関数
      * 
