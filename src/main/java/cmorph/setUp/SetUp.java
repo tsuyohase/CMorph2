@@ -15,12 +15,20 @@ import cmorph.utils.Point;
 
 public class SetUp {
     /**
+     * NodeとUserを生成する
+     */
+    public static void setUp() {
+        setUpNodes();
+        setUpUsers();
+    }
+
+    /**
      * Nodeを生成し, Simulatorのリストに追加する
      * 
      * @param
      * @return
      */
-    public static void setUpNodes() {
+    private static void setUpNodes() {
         for (int id = 0; id < MICRO_DATA_CENTER_NUM + DATA_CENTER_NUM; id++) {
             Point nodeLocation = NodeSetUp.getNodeLocation(id);
             int containerNum = NodeSetUp.getNodeContainerNum(id);
@@ -35,7 +43,7 @@ public class SetUp {
      * @param
      * @return
      */
-    public static void setUpUsers() {
+    private static void setUpUsers() {
         for (int id = 0; id < USER_NUM; id++) {
             // 出現時間と消滅時間を取得
             long spawnTime = UserSetUp.getSpawnTime(id);

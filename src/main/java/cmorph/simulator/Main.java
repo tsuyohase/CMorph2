@@ -1,5 +1,7 @@
 package cmorph.simulator;
 
+import cmorph.logger.Logger;
+import cmorph.logger.OutputData;
 import cmorph.setUp.SetUp;
 import java.util.Random;
 
@@ -12,18 +14,12 @@ public class Main {
      * @param args
      */
     public static void main(String[] args) {
-        SetUp.setUpNodes();
-        SetUp.setUpUsers();
+        SetUp.setUp();
 
         while (Timer.getEvent() != null) {
             Timer.runEvent();
         }
-    }
 
-    /**
-     * セットアップ関数
-     */
-    private static void setup() {
-
+        Logger.log();
     }
 }
