@@ -27,7 +27,7 @@ public class User {
         return this.scenario.apply(time);
     }
 
-    public boolean isActivate(long time) {
+    public boolean isActive(long time) {
         Point currentLocation = this.scenario.apply(time);
         return (0 <= currentLocation.getX() && currentLocation.getX() <= MAP_WIDTH && 0 <= currentLocation.getY()
                 && currentLocation.getY() <= MAP_HEIGHT);

@@ -1,5 +1,6 @@
 package cmorph.settings;
 
+import cmorph.cost.PseudoCostFunctions.LoadCostFunctionType;
 import cmorph.setUp.JobSetUp.DataObjectTargetType;
 import cmorph.setUp.UserSetUp.Scenario;
 import cmorph.setUp.UserSetUp.UserLocationScenario;
@@ -26,9 +27,15 @@ public class SimulationConfiguration {
     // Node
     public static final int MICRO_DATA_CENTER_NUM = 4;
     public static final int DATA_CENTER_NUM = 0;
-    public static final int AVE_MDC_CONTAINER_NUM = 100;
+    public static final int AVE_MDC_CONTAINER_NUM = 1000;
     public static final int AVE_DC_CONTAINER_NUM = 1000;
     public static final boolean RANDOM_NODE_LOCATION = false;
+
+    // AllocationServer
+    public static final LoadCostFunctionType LOAD_COST_FUNCTION_TYPE = LoadCostFunctionType.CONVEX;
+    public static final int Time_UNIT_NUM = 10;
+    public static final boolean useCostDifRandomization = false;
+    public static final boolean useMigTimeRandomization = false;
 
     // Simulator
     public static final long END_TIME = 1000;

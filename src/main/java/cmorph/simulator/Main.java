@@ -1,5 +1,6 @@
 package cmorph.simulator;
 
+import cmorph.setUp.SetUp;
 import java.util.Random;
 
 public class Main {
@@ -11,7 +12,12 @@ public class Main {
      * @param args
      */
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        SetUp.setUpNodes();
+        SetUp.setUpUsers();
+
+        while (Timer.getEvent() != null) {
+            Timer.runEvent();
+        }
     }
 
     /**

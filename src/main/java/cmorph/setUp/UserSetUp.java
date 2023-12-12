@@ -53,7 +53,7 @@ public class UserSetUp {
         if (USER_SPAWN_SCENARIO == UserSpawnScenario.BEGINNING) {
             spawnTime = 0;
         } else if (USER_SPAWN_SCENARIO == UserSpawnScenario.MOUNTAIN) {
-            spawnTime = 0;
+            spawnTime = (END_TIME / 3) * id / USER_NUM;
         } else if (USER_SPAWN_SCENARIO == UserSpawnScenario.WAVE) {
             spawnTime = 0;
         } else if (USER_SPAWN_SCENARIO == UserSpawnScenario.RANDOM) {
@@ -76,7 +76,7 @@ public class UserSetUp {
         if (USER_SPAWN_SCENARIO == UserSpawnScenario.BEGINNING) {
             despawnTime = END_TIME;
         } else if (USER_SPAWN_SCENARIO == UserSpawnScenario.MOUNTAIN) {
-            despawnTime = END_TIME;
+            despawnTime = (2 * END_TIME / 3) + (END_TIME / 3) * id / USER_NUM;
         } else if (USER_SPAWN_SCENARIO == UserSpawnScenario.WAVE) {
             despawnTime = END_TIME;
         } else if (USER_SPAWN_SCENARIO == UserSpawnScenario.RANDOM) {

@@ -1,5 +1,8 @@
 package cmorph.event;
 
-public class Event {
+public interface Event {
+    long getTime();
+
+    void run();
 
 }
