@@ -51,11 +51,11 @@ public class NodeSetUp {
         int nodesPerColumn = (int) Math.ceil((double) nodeNum / nodesPerRow);
 
         // 表示の関係で外周に1マスずつ余白を設ける
-        int locationNumPerRow = nodesPerRow + 2;
-        int locationNumPerColumn = nodesPerColumn + 2;
+        int locationNumPerRow = nodesPerRow + 1;
+        int locationNumPerColumn = nodesPerColumn + 1;
 
-        double x = (id % locationNumPerRow + 1) * (MAP_WIDTH / locationNumPerRow);
-        double y = (id / locationNumPerRow + 1) * (MAP_HEIGHT / locationNumPerColumn);
+        double x = (id % nodesPerRow + 1) * (MAP_WIDTH / locationNumPerRow);
+        double y = (id / nodesPerRow + 1) * (MAP_HEIGHT / locationNumPerColumn);
         return new Point(x, y);
     }
 

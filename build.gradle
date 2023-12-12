@@ -7,10 +7,10 @@ task simulator(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 }
 
-// task visualizer(type: JavaExec) {
-//     main = 'cmorph.visualizer.CMorphVisualizer'
-//     classpath = sourceSets.main.runtimeClasspath
-// }
+task visualizer(type: JavaExec) {
+    main = 'cmorph.visualizer.CMorphVisualizer'
+    classpath = sourceSets.main.runtimeClasspath
+}
 
 repositories { 
     mavenCentral() 

@@ -38,6 +38,7 @@ public class ConfigData {
     public ConfigData() {
         this.mapWidth = SimulationConfiguration.MAP_WIDTH;
         this.mapHeight = SimulationConfiguration.MAP_HEIGHT;
+        this.userNum = SimulationConfiguration.USER_NUM;
         this.userLocationScenario = SimulationConfiguration.USER_LOCATION_SCENARIO;
         this.userSpawnScenario = SimulationConfiguration.USER_SPAWN_SCENARIO;
         this.randomJobTimeSlot = SimulationConfiguration.RANDOM_JOB_TIME_SLOT;
@@ -78,7 +79,7 @@ public class ConfigData {
         return userSpawnScenario;
     }
 
-    public boolean isRandomJobTimeSlot() {
+    public boolean getRandomJobTimeSlot() {
         return randomJobTimeSlot;
     }
 
@@ -118,7 +119,7 @@ public class ConfigData {
         return aveDCContainerNum;
     }
 
-    public boolean isRandomNodeLocation() {
+    public boolean getRandomNodeLocation() {
         return randomNodeLocation;
     }
 
@@ -130,11 +131,11 @@ public class ConfigData {
         return timeUnitNum;
     }
 
-    public boolean isUseCostDifRandomization() {
+    public boolean getUseCostDifRandomization() {
         return useCostDifRandomization;
     }
 
-    public boolean isUseMigTimeRandomization() {
+    public boolean getUseMigTimeRandomization() {
         return useMigTimeRandomization;
     }
 
