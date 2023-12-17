@@ -1,8 +1,9 @@
 package cmorph.entities;
 
 import static cmorph.settings.SimulationConfiguration.DATA_CENTER_NUM;
+import static cmorph.settings.SimulationConfiguration.ELAPSED_TIME_THRESHOLD;
 import static cmorph.settings.SimulationConfiguration.MICRO_DATA_CENTER_NUM;
-import static cmorph.settings.SimulationConfiguration.Time_UNIT_NUM;
+import static cmorph.settings.SimulationConfiguration.TIME_UNIT_NUM;
 import static cmorph.settings.SimulationConfiguration.USER_NUM;
 import static cmorph.settings.SimulationConfiguration.useCostDifRandomization;
 import static cmorph.settings.SimulationConfiguration.useMigTimeRandomization;
@@ -58,8 +59,12 @@ public class AllocationServer {
                 double load = nodes.get(i).getLoad(Timer.getCurrentTime() - 1);
                 int remainingContainerNum = nodes.get(i).getRemainingContainerNum(Timer.getCurrentTime() - 1);
                 // EWMAを計算し更新
-                nodeLoadEWMA.set(i,
-                        (nodeLoadEWMA.get(i) * (1 - (1.0 / Time_UNIT_NUM))) + (load * (1.0 / Time_UNIT_NUM)));
+                if (nodeLoadEWMA.get(i) == 0) {
+                    nodeLoadEWMA.set(i, load);
+                } else {
+                    nodeLoadEWMA.set(i,
+                            (nodeLoadEWMA.get(i) * (1 - (1.0 / TIME_UNIT_NUM))) + (load * (1.0 / TIME_UNIT_NUM)));
+                }
                 remainingContainerNums.set(i, remainingContainerNum);
             }
             updateTime = Timer.getCurrentTime();
@@ -111,7 +116,7 @@ public class AllocationServer {
             bestNode.receiveJob(job);
         } else {
             // 割当先の変更を行う確率
-            double migrationProbability = 1;
+            double migrationProbability = 1.0;
 
             // コストの差をもとに確率を変更
             if (useCostDifRandomization && previousAllocateNodeCost != -1) {
@@ -126,8 +131,8 @@ public class AllocationServer {
             // 前回の割当先からの経過時間をもとに確率を変更
             if (useMigTimeRandomization && lastMigrateTimeList.get(publisherId) != -1) {
                 long elapsedTime = Timer.getCurrentTime() - lastMigrateTimeList.get(publisherId);
-                if (elapsedTime < 5) {
-                    migrationProbability *= elapsedTime * 0.2;
+                if (elapsedTime < ELAPSED_TIME_THRESHOLD) {
+                    migrationProbability *= (double) elapsedTime / ELAPSED_TIME_THRESHOLD;
                 }
             }
 

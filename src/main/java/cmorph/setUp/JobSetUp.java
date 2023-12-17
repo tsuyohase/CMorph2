@@ -7,6 +7,7 @@ import static cmorph.settings.SimulationConfiguration.DATA_CENTER_NUM;
 import static cmorph.settings.SimulationConfiguration.DATA_OBJECT_TARGET_TYPE;
 import static cmorph.settings.SimulationConfiguration.FRONT_WEIGHT;
 import static cmorph.settings.SimulationConfiguration.MICRO_DATA_CENTER_NUM;
+import static cmorph.settings.SimulationConfiguration.RANDOMIZE_RATE;
 import static cmorph.settings.SimulationConfiguration.RANDOM_JOB_TIME_SLOT;
 import static cmorph.simulator.Main.random;
 
@@ -32,7 +33,7 @@ public class JobSetUp {
     public static Job getInitialJob(User user) {
         int jobTimeSlot;
         if (RANDOM_JOB_TIME_SLOT) {
-            jobTimeSlot = (int) (((random.nextDouble() + 1) / 2) * AVE_JOB_TIME_SLOT);
+            jobTimeSlot = (int) ((1 - RANDOMIZE_RATE + 2 * random.nextDouble() * RANDOMIZE_RATE) * AVE_JOB_TIME_SLOT);
         } else {
             jobTimeSlot = AVE_JOB_TIME_SLOT;
         }

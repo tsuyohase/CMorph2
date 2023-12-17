@@ -42,7 +42,7 @@ public class Logger {
         for (long time = 0; time <= END_TIME; time++) {
             simulationData.addTimeStepData(getTimeStepData(time));
         }
-        ConfigData configData = new ConfigData();
+        ConfigData configData = new ConfigData(Simulator.getSimulatedNodes());
         return new OutputData(configData, simulationData);
     }
 
@@ -55,7 +55,7 @@ public class Logger {
         }
         for (Node node : Simulator.getSimulatedNodes()) {
             nodeStates.add(new NodeState(node.getNodeId(), node.getLocation().getX(), node.getLocation().getY(),
-                    node.getLoad(time), node.getRemainingContainerNum(time)));
+                    node.getLoad(time), node.getContainerNum()));
         }
         return new TimeStepData(userStates, nodeStates);
     }

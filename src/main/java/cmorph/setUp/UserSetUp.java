@@ -8,8 +8,6 @@ import static cmorph.settings.SimulationConfiguration.USER_NUM;
 import static cmorph.settings.SimulationConfiguration.USER_SPAWN_SCENARIO;
 import static cmorph.simulator.Main.random;
 
-import org.omg.CORBA.SystemException;
-
 import cmorph.utils.Point;
 
 public class UserSetUp {

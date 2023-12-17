@@ -1,5 +1,9 @@
 package cmorph.event;
 
+import static cmorph.settings.SimulationConfiguration.AVE_JOB_TIME_SLOT;
+import static cmorph.settings.SimulationConfiguration.RANDOM_JOB_TIME_SLOT;
+import static cmorph.simulator.Main.random;
+
 import cmorph.entities.AllocationServer;
 import cmorph.job.Job;
 import cmorph.simulator.Timer;
@@ -22,9 +26,9 @@ public class JobEvent implements Event {
         AllocationServer.allocateJob(this.job);
 
         // 次のJobを生成
-        if (job.getUser().isActive(time + job.getTimeSlotNum())) {
-            Job nextJob = job.generateNextJob();
-            JobEvent nextJobEvent = new JobEvent(time + job.getTimeSlotNum(), nextJob);
+        Job nextJob = job.generateNextJob();
+        if (job.getUser().isActive(time + nextJob.getTimeSlotNum())) {
+            JobEvent nextJobEvent = new JobEvent(time + nextJob.getTimeSlotNum(), nextJob);
             Timer.putEvent(nextJobEvent);
         }
     }

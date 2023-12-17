@@ -1,6 +1,7 @@
 package cmorph.job;
 
 import static cmorph.settings.SimulationConfiguration.AVE_JOB_TIME_SLOT;
+import static cmorph.settings.SimulationConfiguration.RANDOMIZE_RATE;
 import static cmorph.settings.SimulationConfiguration.RANDOM_JOB_TIME_SLOT;
 import static cmorph.simulator.Main.random;
 
@@ -67,7 +68,8 @@ public class Job {
     public Job generateNextJob() {
         int nextJobTimeSlot;
         if (RANDOM_JOB_TIME_SLOT) {
-            nextJobTimeSlot = (int) (((random.nextDouble() + 1) / 2) * AVE_JOB_TIME_SLOT);
+            nextJobTimeSlot = (int) ((1 - RANDOMIZE_RATE + 2 * random.nextDouble() * RANDOMIZE_RATE)
+                    * AVE_JOB_TIME_SLOT);
         } else {
             nextJobTimeSlot = AVE_JOB_TIME_SLOT;
         }

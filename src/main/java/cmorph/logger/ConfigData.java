@@ -1,11 +1,15 @@
 package cmorph.logger;
 
+import java.util.ArrayList;
+
 import cmorph.cost.PseudoCostFunctions.LoadCostFunctionType;
+import cmorph.entities.Node;
 import cmorph.setUp.JobSetUp.DataObjectTargetType;
 import cmorph.setUp.UserSetUp.UserLocationScenario;
 import cmorph.setUp.UserSetUp.UserSpawnScenario;
 
 import cmorph.settings.SimulationConfiguration;
+import cmorph.simulator.Simulator;
 
 public class ConfigData {
     private int mapWidth;
@@ -35,7 +39,13 @@ public class ConfigData {
 
     private long endTime;
 
+    private ArrayList<Double> nodeXList;
+    private ArrayList<Double> nodeYList;
+
     public ConfigData() {
+    }
+
+    public ConfigData(ArrayList<Node> nodes) {
         this.mapWidth = SimulationConfiguration.MAP_WIDTH;
         this.mapHeight = SimulationConfiguration.MAP_HEIGHT;
         this.userNum = SimulationConfiguration.USER_NUM;
@@ -53,10 +63,18 @@ public class ConfigData {
         this.aveDCContainerNum = SimulationConfiguration.AVE_DC_CONTAINER_NUM;
         this.randomNodeLocation = SimulationConfiguration.RANDOM_NODE_LOCATION;
         this.loadCostFunctionType = SimulationConfiguration.LOAD_COST_FUNCTION_TYPE;
-        this.timeUnitNum = SimulationConfiguration.Time_UNIT_NUM;
+        this.timeUnitNum = SimulationConfiguration.TIME_UNIT_NUM;
         this.useCostDifRandomization = SimulationConfiguration.useCostDifRandomization;
         this.useMigTimeRandomization = SimulationConfiguration.useMigTimeRandomization;
         this.endTime = SimulationConfiguration.END_TIME;
+
+        this.nodeXList = new ArrayList<>();
+        this.nodeYList = new ArrayList<>();
+        for (int i = 0; i < SimulationConfiguration.MICRO_DATA_CENTER_NUM
+                + SimulationConfiguration.DATA_CENTER_NUM; i++) {
+            this.nodeXList.add(nodes.get(i).getLocation().getX());
+            this.nodeYList.add(nodes.get(i).getLocation().getY());
+        }
     }
 
     public int getMapWidth() {
@@ -141,5 +159,13 @@ public class ConfigData {
 
     public long getEndTime() {
         return endTime;
+    }
+
+    public ArrayList<Double> getNodeXList() {
+        return nodeXList;
+    }
+
+    public ArrayList<Double> getNodeYList() {
+        return nodeYList;
     }
 }

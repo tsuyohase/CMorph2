@@ -139,7 +139,7 @@ public class MainPanelDrawer extends Thread {
         TimeStepData stepData = data.get(currentTime);
 
         // データを描画する処理
-        List<UserState> userStates = stepData.getUserStates();
+        // List<UserState> userStates = stepData.getUserStates();
         List<NodeState> nodeStates = stepData.getNodeStates();
 
         for (int i = 0; i < nodeStates.size(); i++) {
@@ -148,8 +148,9 @@ public class MainPanelDrawer extends Thread {
                 nodeSize = (int) (3 * nodeSizeBase / 2);
             }
             NodeState nodeState = nodeStates.get(i);
-            int nodeX = convertPoint(nodeState.getX()) - nodeSize / 2;
-            int nodeY = convertPoint(nodeState.getY()) - nodeSize / 2;
+
+            int nodeX = convertPoint(configData.getNodeXList().get(i)) - nodeSize / 2;
+            int nodeY = convertPoint(configData.getNodeYList().get(i)) - nodeSize / 2;
 
             threadGraphics.setColor(LoadColor(nodeState.getLoad()));
             threadGraphics.fillOval(nodeX, nodeY, nodeSize, nodeSize);
@@ -157,16 +158,16 @@ public class MainPanelDrawer extends Thread {
 
         }
 
-        for (int i = 0; i < userStates.size(); i++) {
-            UserState userState = userStates.get(i);
+        // for (int i = 0; i < userStates.size(); i++) {
+        // UserState userState = userStates.get(i);
 
-            int userX = convertPoint(userState.getX());
-            int userY = convertPoint(userState.getY());
+        // int userX = convertPoint(userState.getX());
+        // int userY = convertPoint(userState.getY());
 
-            threadGraphics.setColor(Color.BLACK);
-            threadGraphics.fillOval(userX, userY,
-                    userSize, userSize);
-        }
+        // threadGraphics.setColor(Color.BLACK);
+        // threadGraphics.fillOval(userX, userY,
+        // userSize, userSize);
+        // }
 
         mainPanel.repaint();
 

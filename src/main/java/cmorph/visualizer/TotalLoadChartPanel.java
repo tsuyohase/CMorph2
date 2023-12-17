@@ -86,6 +86,7 @@ public class TotalLoadChartPanel extends JPanel {
         this.colors = new ArrayList<>();
         this.legend = new ArrayList<>();
         this.changeData = true;
+        this.totalContainerNum = 0;
 
         // サーバーごとに異なる色を設定
         Random rand = new Random(26);
@@ -96,6 +97,8 @@ public class TotalLoadChartPanel extends JPanel {
             } else {
                 legend.add("MDC " + i);
             }
+            totalContainerNum += initLoads.get(i).getContainerNum();
+
         }
     }
 
@@ -132,7 +135,10 @@ public class TotalLoadChartPanel extends JPanel {
         for (int i = 0; i <= 10; i++) {
             int y = getHeight() - margin - i * graphHeight / 10;
             g.drawLine(margin - 5, y, margin, y);
-            g.drawString(Double.toString((double) i * totalContainerNum / 10), margin - 40, y + 5);
+            g.drawString(
+                    Double.toString(
+                            (double) i * (configData.getDataCenterNum() + configData.getMicroDataCenterNum()) / 10),
+                    margin - 40, y + 5);
         }
 
         for (int t = 0; t < data.size(); t++) {

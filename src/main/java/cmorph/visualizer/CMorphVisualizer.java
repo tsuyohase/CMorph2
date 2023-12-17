@@ -191,7 +191,8 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
         configPanel.add(new JLabel("AVE_DC_CONTAINER_NUM: " + configData.getAveDCContainerNum()));
         configPanel.add(new JLabel("RANDOM_NODE_LOCATION: " + configData.getRandomNodeLocation()));
         configPanel.add(new JLabel("LOAD_COST_FUNCTION_TYPE: " + configData.getLoadCostFunctionType()));
-        configPanel.add(new JLabel("Time_UNIT_NUM: " + configData.getTimeUnitNum()));
+        configPanel.add(new JLabel("USER_SPAWN_SCENARIO: " + configData.getUserSpawnScenario()));
+        configPanel.add(new JLabel("TIME_UNIT_NUM: " + configData.getTimeUnitNum()));
         configPanel.add(new JLabel("useCostDifRandomization: " + configData.getUseCostDifRandomization()));
         configPanel.add(new JLabel("useMigTimeRandomization: " + configData.getUseMigTimeRandomization()));
         configPanel.add(new JLabel("END_TIME: " + configData.getEndTime()));

@@ -5,6 +5,7 @@ import cmorph.simulator.Timer;
 import cmorph.utils.Point;
 
 import java.util.List;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.PriorityQueue;
@@ -17,22 +18,28 @@ public class Node {
     /**
      * ノードに割り当てられたジョブを終了時間の遅い順で並べたキュー
      */
-    private PriorityQueue<ScheduledJob> allocatedJobs = new PriorityQueue<>();
+    private ArrayList<ScheduledJob> allocatedJobs = new ArrayList<>();
 
     /**
      * 割り当てられたジョブを終了時間で管理するためのクラス
      */
     private static class ScheduledJob implements Comparable<ScheduledJob> {
         private final Job job;
+        private final long startTime;
         private final long endTime;
 
-        private ScheduledJob(Job job, long endTime) {
+        private ScheduledJob(Job job, long startTime, long endTime) {
             this.job = job;
+            this.startTime = startTime;
             this.endTime = endTime;
         }
 
         private Job getJob() {
             return this.job;
+        }
+
+        private long getStartTime() {
+            return this.startTime;
         }
 
         private long getEndTime() {
@@ -72,7 +79,7 @@ public class Node {
      */
     public void receiveJob(Job job) {
         long endTime = Timer.getCurrentTime() + job.getTimeSlotNum() - 1;
-        this.allocatedJobs.add(new ScheduledJob(job, endTime));
+        this.allocatedJobs.add(new ScheduledJob(job, Timer.getCurrentTime(), endTime));
     }
 
     /**
@@ -84,12 +91,10 @@ public class Node {
     public ArrayList<Job> getRunningJobs(long time) {
         ArrayList<Job> runningJobs = new ArrayList<>();
         for (ScheduledJob scheduledJob : this.allocatedJobs) {
-            if (scheduledJob.getEndTime() >= time) {
+            if ((scheduledJob.getStartTime() <= time) && (time <= scheduledJob.getEndTime())) {
                 if (scheduledJob.getJob().getUser().isActive(time)) {
                     runningJobs.add(scheduledJob.getJob());
                 }
-            } else {
-                break;
             }
         }
         return runningJobs;
@@ -107,7 +112,8 @@ public class Node {
         for (int i = 0; i < runningJobs.size(); i++) {
             runningContainerNum += runningJobs.get(i).getUseContainerNum();
         }
-        return (double) runningContainerNum / (double) this.containerNum;
+        double load = Math.min(1, (double) runningContainerNum / (double) this.containerNum);
+        return load;
     }
 
     /**
