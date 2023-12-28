@@ -20,6 +20,7 @@ public class ConfigData {
     private UserSpawnScenario userSpawnScenario;
 
     private boolean randomJobTimeSlot;
+    private double randomizeRate;
     private int aveJobTimeSlot;
     private int aveJobContainerNum;
     private int frontWeight;
@@ -35,7 +36,9 @@ public class ConfigData {
     private LoadCostFunctionType loadCostFunctionType;
     private int timeUnitNum;
     private boolean useCostDifRandomization;
+    private double costGainThreshold;
     private boolean useMigTimeRandomization;
+    private int elapsedTimeThreshold;
 
     private long endTime;
 
@@ -52,6 +55,7 @@ public class ConfigData {
         this.userLocationScenario = SimulationConfiguration.USER_LOCATION_SCENARIO;
         this.userSpawnScenario = SimulationConfiguration.USER_SPAWN_SCENARIO;
         this.randomJobTimeSlot = SimulationConfiguration.RANDOM_JOB_TIME_SLOT;
+        this.randomizeRate = SimulationConfiguration.RANDOMIZE_RATE;
         this.aveJobTimeSlot = SimulationConfiguration.AVE_JOB_TIME_SLOT;
         this.aveJobContainerNum = SimulationConfiguration.AVE_JOB_CONTAINER_NUM;
         this.frontWeight = SimulationConfiguration.FRONT_WEIGHT;
@@ -65,7 +69,9 @@ public class ConfigData {
         this.loadCostFunctionType = SimulationConfiguration.LOAD_COST_FUNCTION_TYPE;
         this.timeUnitNum = SimulationConfiguration.TIME_UNIT_NUM;
         this.useCostDifRandomization = SimulationConfiguration.useCostDifRandomization;
+        this.costGainThreshold = SimulationConfiguration.COST_GAIN_THRESHOLD;
         this.useMigTimeRandomization = SimulationConfiguration.useMigTimeRandomization;
+        this.elapsedTimeThreshold = SimulationConfiguration.ELAPSED_TIME_THRESHOLD;
         this.endTime = SimulationConfiguration.END_TIME;
 
         this.nodeXList = new ArrayList<>();
@@ -99,6 +105,10 @@ public class ConfigData {
 
     public boolean getRandomJobTimeSlot() {
         return randomJobTimeSlot;
+    }
+
+    public double getRandomizeRate() {
+        return randomizeRate;
     }
 
     public int getAveJobTimeSlot() {
@@ -153,8 +163,16 @@ public class ConfigData {
         return useCostDifRandomization;
     }
 
+    public double getCostGainThreshold() {
+        return costGainThreshold;
+    }
+
     public boolean getUseMigTimeRandomization() {
         return useMigTimeRandomization;
+    }
+
+    public int getElapsedTimeThreshold() {
+        return elapsedTimeThreshold;
     }
 
     public long getEndTime() {

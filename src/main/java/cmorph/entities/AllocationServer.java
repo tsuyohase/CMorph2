@@ -9,6 +9,8 @@ import static cmorph.settings.SimulationConfiguration.useCostDifRandomization;
 import static cmorph.settings.SimulationConfiguration.useMigTimeRandomization;
 import static cmorph.simulator.Main.random;
 import static cmorph.settings.SimulationConfiguration.AVE_JOB_CONTAINER_NUM;
+import static cmorph.settings.SimulationConfiguration.COST_GAIN_THRESHOLD;
+
 import java.util.Collections;
 
 import cmorph.cost.PseudoCostFunctions;
@@ -120,11 +122,11 @@ public class AllocationServer {
 
             // コストの差をもとに確率を変更
             if (useCostDifRandomization && previousAllocateNodeCost != -1) {
-                double migrateGain = previousAllocateNodeCost / bestCost - 1;
+                double migrateGain = 1 - bestCost / previousAllocateNodeCost;
                 if (migrateGain <= 0) {
                     migrationProbability = 0;
-                } else if (migrateGain < 0.1) {
-                    migrationProbability *= migrateGain * 10;
+                } else if (migrateGain < COST_GAIN_THRESHOLD) {
+                    migrationProbability *= migrateGain / COST_GAIN_THRESHOLD;
                 }
             }
 

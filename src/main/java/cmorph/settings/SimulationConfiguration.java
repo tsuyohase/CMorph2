@@ -17,9 +17,9 @@ public class SimulationConfiguration {
     public static final UserSpawnScenario USER_SPAWN_SCENARIO = UserSpawnScenario.MOUNTAIN;
 
     // Job
-    public static final boolean RANDOM_JOB_TIME_SLOT = true;
+    public static final boolean RANDOM_JOB_TIME_SLOT = false;
     public static final double RANDOMIZE_RATE = 0.05;
-    public static final int AVE_JOB_TIME_SLOT = 100;
+    public static final int AVE_JOB_TIME_SLOT = 10;
     public static final int AVE_JOB_CONTAINER_NUM = 10;
     public static final int FRONT_WEIGHT = 1;
     public static final int BACK_WEIGHT = 1;
@@ -34,12 +34,13 @@ public class SimulationConfiguration {
 
     // AllocationServer
     public static final LoadCostFunctionType LOAD_COST_FUNCTION_TYPE = LoadCostFunctionType.CONVEX;
-    public static final int TIME_UNIT_NUM = 1;
-    public static final boolean useCostDifRandomization = false;
+    public static final int TIME_UNIT_NUM = 15;
+    public static final boolean useCostDifRandomization = true;
+    public static final double COST_GAIN_THRESHOLD = 0.2;
     public static final boolean useMigTimeRandomization = true;
-    public static final int ELAPSED_TIME_THRESHOLD = 500;
+    public static final int ELAPSED_TIME_THRESHOLD = 5000;
 
     // Simulator
-    public static final long END_TIME = 10000;
+    public static final long END_TIME = 100000;
 
 }

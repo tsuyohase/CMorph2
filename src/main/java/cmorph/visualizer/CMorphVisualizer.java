@@ -176,25 +176,30 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
 
     private void setConfigPanel() {
         configPanel.setLayout(new GridLayout(10, 10, 0, 0));
-        configPanel.add(new JLabel("MAP_WIDTH: " + configData.getMapWidth()));
-        configPanel.add(new JLabel("MAP_HEIGHT: " + configData.getMapHeight()));
+        // configPanel.add(new JLabel("MAP_WIDTH: " + configData.getMapWidth()));
+        // configPanel.add(new JLabel("MAP_HEIGHT: " + configData.getMapHeight()));
         configPanel.add(new JLabel("MICRO_DATA_CENTER_NUM: " + configData.getMicroDataCenterNum()));
         configPanel.add(new JLabel("DATA_CENTER_NUM: " + configData.getDataCenterNum()));
         configPanel.add(new JLabel("USER_NUM: " + configData.getUserNum()));
         configPanel.add(new JLabel("RANDOM_JOB_TIME_SLOT: " + configData.getRandomJobTimeSlot()));
+        configPanel.add(new JLabel("RANDOMIZE_RATE: " + configData.getRandomizeRate()));
         configPanel.add(new JLabel("AVE_JOB_TIME_SLOT: " + configData.getAveJobTimeSlot()));
         configPanel.add(new JLabel("AVE_JOB_CONTAINER_NUM: " + configData.getAveJobContainerNum()));
-        configPanel.add(new JLabel("FRONT_WEIGHT: " + configData.getFrontWeight()));
-        configPanel.add(new JLabel("BACK_WEIGHT: " + configData.getBackWeight()));
-        configPanel.add(new JLabel("DATA_OBJECT_TARGET_TYPE: " + configData.getDataObjectTargetType()));
+        // configPanel.add(new JLabel("FRONT_WEIGHT: " + configData.getFrontWeight()));
+        // configPanel.add(new JLabel("BACK_WEIGHT: " + configData.getBackWeight()));
+        // configPanel.add(new JLabel("DATA_OBJECT_TARGET_TYPE: " +
+        // configData.getDataObjectTargetType()));
         configPanel.add(new JLabel("AVE_MDC_CONTAINER_NUM: " + configData.getAveMDCContainerNum()));
         configPanel.add(new JLabel("AVE_DC_CONTAINER_NUM: " + configData.getAveDCContainerNum()));
-        configPanel.add(new JLabel("RANDOM_NODE_LOCATION: " + configData.getRandomNodeLocation()));
+        // configPanel.add(new JLabel("RANDOM_NODE_LOCATION: " +
+        // configData.getRandomNodeLocation()));
         configPanel.add(new JLabel("LOAD_COST_FUNCTION_TYPE: " + configData.getLoadCostFunctionType()));
         configPanel.add(new JLabel("USER_SPAWN_SCENARIO: " + configData.getUserSpawnScenario()));
         configPanel.add(new JLabel("TIME_UNIT_NUM: " + configData.getTimeUnitNum()));
         configPanel.add(new JLabel("useCostDifRandomization: " + configData.getUseCostDifRandomization()));
+        configPanel.add(new JLabel("COST_GAIN_THRESHOLD: " + configData.getCostGainThreshold()));
         configPanel.add(new JLabel("useMigTimeRandomization: " + configData.getUseMigTimeRandomization()));
+        configPanel.add(new JLabel("ELAPSED_TIME_THRESHOLD: " + configData.getElapsedTimeThreshold()));
         configPanel.add(new JLabel("END_TIME: " + configData.getEndTime()));
     }
 
@@ -212,6 +217,7 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
 
         this.comboBox = new JComboBox<>();
         comboBox.addActionListener(this);
+        Collections.sort(outputFileNames);
         for (int i = 0; i < outputFileNames.size(); i++) {
             comboBox.addItem(outputFileNames.get(i));
         }
