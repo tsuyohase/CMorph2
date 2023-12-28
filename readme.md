@@ -19,7 +19,7 @@ Instructions on how to install and set up the project. -->
 `gradle simulator`
 
 可視化
-`gradle simulator`
+`gradle visuzlizer`
 
 <!-- ## Contributing
 
