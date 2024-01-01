@@ -17,6 +17,8 @@ import java.util.ArrayList;
 
 public class Logger {
 
+    private static SimulationData simulationData = new SimulationData();
+
     public static void log() {
         OutputData outputData = getOutputData();
         saveOutputFile(outputData);
@@ -38,12 +40,14 @@ public class Logger {
     }
 
     private static OutputData getOutputData() {
-        SimulationData simulationData = new SimulationData();
-        for (long time = 0; time <= END_TIME; time++) {
-            simulationData.addTimeStepData(getTimeStepData(time));
-        }
         ConfigData configData = new ConfigData(Simulator.getSimulatedNodes());
         return new OutputData(configData, simulationData);
+    }
+
+    public static void addTimeStepData(long startTime, long endTime) {
+        for (long time = startTime; time < endTime; time++) {
+            simulationData.addTimeStepData(getTimeStepData(time));
+        }
     }
 
     private static TimeStepData getTimeStepData(long time) {

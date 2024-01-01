@@ -15,6 +15,7 @@ import java.util.Collections;
 
 import cmorph.cost.PseudoCostFunctions;
 import cmorph.job.Job;
+import cmorph.logger.Logger;
 import cmorph.simulator.Simulator;
 import cmorph.simulator.Timer;
 
@@ -52,23 +53,43 @@ public class AllocationServer {
     /**
      * ノードの負荷を更新する関数
      */
-    public static void updateNodeLoads() {
+    private static void updateNodeLoads() {
+        ArrayList<Node> nodes = Simulator.getSimulatedNodes();
+        for (int i = 0; i < nodes.size(); i++) {
+            // currentTime -1 の負荷を取得
+            double load = nodes.get(i).getLoad(Timer.getCurrentTime() - 1);
+            int remainingContainerNum = nodes.get(i).getRemainingContainerNum(Timer.getCurrentTime() - 1);
+            // EWMAを計算し更新
+            if (nodeLoadEWMA.get(i) == 0) {
+                nodeLoadEWMA.set(i, load);
+            } else {
+                nodeLoadEWMA.set(i,
+                        (nodeLoadEWMA.get(i) * (1 - (1.0 / TIME_UNIT_NUM))) + (load * (1.0 / TIME_UNIT_NUM)));
+            }
+            remainingContainerNums.set(i, remainingContainerNum);
+        }
+    }
+
+    private static void removeEndJob() {
+        ArrayList<Node> nodes = Simulator.getSimulatedNodes();
+        for (int i = 0; i < nodes.size(); i++) {
+            nodes.get(i).removeEndJob(Timer.getCurrentTime());
+        }
+    }
+
+    /**
+     * ノードの負荷を更新する関数
+     */
+    public static void updateState() {
         // 同時刻に更新されていないか確認
         if (Timer.getCurrentTime() > updateTime) {
-            ArrayList<Node> nodes = Simulator.getSimulatedNodes();
-            for (int i = 0; i < nodes.size(); i++) {
-                // currentTime -1 の負荷を取得
-                double load = nodes.get(i).getLoad(Timer.getCurrentTime() - 1);
-                int remainingContainerNum = nodes.get(i).getRemainingContainerNum(Timer.getCurrentTime() - 1);
-                // EWMAを計算し更新
-                if (nodeLoadEWMA.get(i) == 0) {
-                    nodeLoadEWMA.set(i, load);
-                } else {
-                    nodeLoadEWMA.set(i,
-                            (nodeLoadEWMA.get(i) * (1 - (1.0 / TIME_UNIT_NUM))) + (load * (1.0 / TIME_UNIT_NUM)));
-                }
-                remainingContainerNums.set(i, remainingContainerNum);
-            }
+            // ノードの負荷を更新
+            updateNodeLoads();
+            // loggerにデータを追加
+            Logger.addTimeStepData(updateTime, Timer.getCurrentTime());
+            // 終了したジョブを削除
+            removeEndJob();
+
             updateTime = Timer.getCurrentTime();
         }
     }

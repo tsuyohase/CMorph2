@@ -7,7 +7,6 @@ import cmorph.event.Event;
 
 public class Timer {
     private static final PriorityQueue<ScheduledEvent> eventQueue = new PriorityQueue<>();
-    private static final Map<Event, ScheduledEvent> eventMap = new HashMap<>();
 
     private static long currentTime = 0;
 
@@ -50,15 +49,6 @@ public class Timer {
         }
     }
 
-    public static void removeEvent(Event event) {
-        if (eventMap.containsKey(event)) {
-            ScheduledEvent scheduledEvent = eventMap.get(event);
-            eventQueue.remove(scheduledEvent);
-            eventMap.remove(event, scheduledEvent);
-
-        }
-    }
-
     public static Event getEvent() {
         if (eventQueue.size() > 0) {
             ScheduledEvent currentEvent = eventQueue.peek();
@@ -70,7 +60,6 @@ public class Timer {
 
     public static void putEvent(Event event) {
         ScheduledEvent scheduledEvent = new ScheduledEvent(event, event.getTime());
-        eventMap.put(event, scheduledEvent);
         eventQueue.add(scheduledEvent);
     }
 

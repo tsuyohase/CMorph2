@@ -22,7 +22,7 @@ public class JobEvent implements Event {
     }
 
     public void run() {
-        AllocationServer.updateNodeLoads();
+        AllocationServer.updateState();
         AllocationServer.allocateJob(this.job);
 
         // 次のJobを生成

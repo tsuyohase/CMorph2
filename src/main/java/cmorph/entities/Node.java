@@ -16,7 +16,7 @@ public class Node {
     private final int containerNum;
 
     /**
-     * ノードに割り当てられたジョブを終了時間の遅い順で並べたキュー
+     * ノードに割り当てられたジョブを終了時間の遅い順で並べた配列
      */
     private ArrayList<ScheduledJob> allocatedJobs = new ArrayList<>();
 
@@ -80,6 +80,21 @@ public class Node {
     public void receiveJob(Job job) {
         long endTime = Timer.getCurrentTime() + job.getTimeSlotNum() - 1;
         this.allocatedJobs.add(new ScheduledJob(job, Timer.getCurrentTime(), endTime));
+        Collections.sort(this.allocatedJobs);
+    }
+
+    /**
+     * timeの時点で終了しているジョブを削除する関数
+     * 
+     * @param time
+     */
+    public void removeEndJob(long time) {
+        for (int i = 0; i < this.allocatedJobs.size(); i++) {
+            if (this.allocatedJobs.get(i).getEndTime() < time) {
+                this.allocatedJobs.remove(i);
+                i--;
+            }
+        }
     }
 
     /**
@@ -90,7 +105,8 @@ public class Node {
      */
     public ArrayList<Job> getRunningJobs(long time) {
         ArrayList<Job> runningJobs = new ArrayList<>();
-        for (ScheduledJob scheduledJob : this.allocatedJobs) {
+        for (int i = 0; i < this.allocatedJobs.size(); i++) {
+            ScheduledJob scheduledJob = this.allocatedJobs.get(i);
             if ((scheduledJob.getStartTime() <= time) && (time <= scheduledJob.getEndTime())) {
                 if (scheduledJob.getJob().getUser().isActive(time)) {
                     runningJobs.add(scheduledJob.getJob());
