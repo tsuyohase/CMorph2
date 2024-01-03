@@ -6,12 +6,19 @@ import static cmorph.settings.SimulationConfiguration.DATA_CENTER_NUM;
 import static cmorph.settings.SimulationConfiguration.MAP_HEIGHT;
 import static cmorph.settings.SimulationConfiguration.MAP_WIDTH;
 import static cmorph.settings.SimulationConfiguration.MICRO_DATA_CENTER_NUM;
+import static cmorph.settings.SimulationConfiguration.NODE_COST_WEIGHT_TYPE;
 import static cmorph.settings.SimulationConfiguration.RANDOM_NODE_LOCATION;
 
 import cmorph.utils.Point;
 import static cmorph.simulator.Main.random;
 
 public class NodeSetUp {
+
+    public static enum NodeCostWeightType {
+        EQUALITY,
+        PROPORTIONAL,
+    }
+
     /**
      * Nodeの位置を返す
      * 
@@ -64,6 +71,16 @@ public class NodeSetUp {
             return AVE_MDC_CONTAINER_NUM;
         } else {
             return AVE_DC_CONTAINER_NUM;
+        }
+    }
+
+    public static int getNodeCostWeight(int id) {
+        if (NODE_COST_WEIGHT_TYPE == NodeCostWeightType.EQUALITY) {
+            return 1;
+        } else if (NODE_COST_WEIGHT_TYPE == NodeCostWeightType.PROPORTIONAL) {
+            return (int) Math.pow(2, id);
+        } else {
+            throw new Error("NodeCostWeightType is not defined.");
         }
     }
 }

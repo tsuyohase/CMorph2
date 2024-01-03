@@ -1,5 +1,6 @@
 package cmorph.setUp;
 
+import static cmorph.settings.SimulationConfiguration.AVE_DATA_OBJECT_SIZE;
 import static cmorph.settings.SimulationConfiguration.AVE_JOB_CONTAINER_NUM;
 import static cmorph.settings.SimulationConfiguration.AVE_JOB_TIME_SLOT;
 import static cmorph.settings.SimulationConfiguration.BACK_WEIGHT;
@@ -20,8 +21,7 @@ public class JobSetUp {
 
     public static enum DataObjectTargetType {
         RANDOM,
-        SINGLE_DC,
-        SINGLE_MDC,
+        LAST_NODE,
     }
 
     /**
@@ -41,14 +41,13 @@ public class JobSetUp {
         Node dataObjectNode;
         if (DATA_OBJECT_TARGET_TYPE == DataObjectTargetType.RANDOM) {
             dataObjectNode = Simulator.getSimulatedNodes().get(random.nextInt(MICRO_DATA_CENTER_NUM + DATA_CENTER_NUM));
-        } else if (DATA_OBJECT_TARGET_TYPE == DataObjectTargetType.SINGLE_MDC) {
-            dataObjectNode = Simulator.getSimulatedNodes().get(random.nextInt(MICRO_DATA_CENTER_NUM));
-        } else if (DATA_OBJECT_TARGET_TYPE == DataObjectTargetType.SINGLE_DC) {
-            dataObjectNode = Simulator.getSimulatedNodes().get(random.nextInt(DATA_CENTER_NUM) + MICRO_DATA_CENTER_NUM);
+        } else if (DATA_OBJECT_TARGET_TYPE == DataObjectTargetType.LAST_NODE) {
+            dataObjectNode = Simulator.getSimulatedNodes().get(MICRO_DATA_CENTER_NUM + DATA_CENTER_NUM - 1);
         } else {
             throw new Error("DataObjectTargetType is not defined");
         }
-        Job job = new Job(user, dataObjectNode, AVE_JOB_CONTAINER_NUM, FRONT_WEIGHT, BACK_WEIGHT, jobTimeSlot);
+        Job job = new Job(user, dataObjectNode, AVE_JOB_CONTAINER_NUM, FRONT_WEIGHT, BACK_WEIGHT, jobTimeSlot,
+                AVE_DATA_OBJECT_SIZE);
 
         return job;
     }

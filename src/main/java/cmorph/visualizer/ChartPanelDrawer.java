@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
+import cmorph.logger.ConfigData;
 import cmorph.logger.TimeStepData;
 
 import static cmorph.settings.SimulationConfiguration.END_TIME;
@@ -23,12 +24,19 @@ public class ChartPanelDrawer extends Thread {
         this.totalLoadPanel = totalLoadPanel;
     }
 
-    public void setData(List<TimeStepData> data) {
+    public void setData(List<TimeStepData> data, ConfigData configData) {
         this.data = data;
         this.currentTime = 0;
-        serverLoadChartPanel.setData(data);
+        serverLoadChartPanel.setData(data, configData);
         serverLoadChartPanel.repaint();
-        totalLoadPanel.setData(data);
+        totalLoadPanel.setData(data, configData);
+        totalLoadPanel.repaint();
+    }
+
+    public void change(boolean isNode, boolean isLink) {
+        serverLoadChartPanel.change(isNode, isLink);
+        serverLoadChartPanel.repaint();
+        totalLoadPanel.change(isNode, isLink);
         totalLoadPanel.repaint();
     }
 

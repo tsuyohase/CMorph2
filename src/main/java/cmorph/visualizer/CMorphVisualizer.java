@@ -25,6 +25,10 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
     JButton startButton;
     JSlider slider;
     JComboBox<String> comboBox;
+    JButton nodeButton;
+    JButton linkButton;
+    boolean isNode = false;
+    boolean isLink = false;
     MainPanel mainPanel;
     LoadChartPanel loadChartPanel;
     TotalLoadChartPanel totalLoadPanel;
@@ -57,8 +61,8 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
         int screenWidth = 1980;
 
         mainPanel = new MainPanel(screenWidth / 3, configData);
-        loadChartPanel = new LoadChartPanel(screenWidth / 2, data, configData);
-        totalLoadPanel = new TotalLoadChartPanel(screenWidth / 2, data, configData);
+        loadChartPanel = new LoadChartPanel(screenWidth / 2, data, configData, isNode, isLink);
+        totalLoadPanel = new TotalLoadChartPanel(screenWidth / 2, data, configData, isNode, isLink);
 
         loadChartPanelDrawer = new ChartPanelDrawer(loadChartPanel, totalLoadPanel, 0, 100, data);
 
@@ -88,6 +92,8 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
         // add(configPanel, BorderLayout.NORTH);
 
         startButton.addActionListener(this);
+        nodeButton.addActionListener(this);
+        linkButton.addActionListener(this);
         pack();
         setVisible(true);
     }
@@ -117,7 +123,7 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
             this.configData = outputData.getConfigData();
             // loadChartPanelDrawer = new ChartPanelDrawer(loadChartPanel, totalLoadPanel,
             // currentTime, 100, data);
-            loadChartPanelDrawer.setData(data);
+            loadChartPanelDrawer.setData(data, configData);
             // loadChartPanelDrawer.setCurrentTime(currentTime);
             // loadChartPanelDrawer.start();
 
@@ -135,6 +141,12 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
             configPanel.revalidate();
             configPanel.repaint();
 
+        } else if (e.getSource() == nodeButton) {
+            isNode = !isNode;
+            loadChartPanelDrawer.change(isNode, isLink);
+        } else if (e.getSource() == linkButton) {
+            isLink = !isLink;
+            loadChartPanelDrawer.change(isNode, isLink);
         }
     }
 
@@ -189,11 +201,15 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
         // configPanel.add(new JLabel("BACK_WEIGHT: " + configData.getBackWeight()));
         // configPanel.add(new JLabel("DATA_OBJECT_TARGET_TYPE: " +
         // configData.getDataObjectTargetType()));
+        configPanel.add(new JLabel("AVE_DATA_OBJECT_SIZE: " + configData.getAveDataObjectSize()));
         configPanel.add(new JLabel("AVE_MDC_CONTAINER_NUM: " + configData.getAveMDCContainerNum()));
         configPanel.add(new JLabel("AVE_DC_CONTAINER_NUM: " + configData.getAveDCContainerNum()));
+        configPanel.add(new JLabel("NODE_COST_WEIGHT_TYPE: " + configData.getNodeCostWeightType()));
         // configPanel.add(new JLabel("RANDOM_NODE_LOCATION: " +
         // configData.getRandomNodeLocation()));
         configPanel.add(new JLabel("LOAD_COST_FUNCTION_TYPE: " + configData.getLoadCostFunctionType()));
+        configPanel.add(new JLabel("NETWORK_COST_FUNCTION_TYPE: " + configData.getNetworkCostFunctionType()));
+        configPanel.add(new JLabel("NETWORK_TIME_UNIT_NUM: " + configData.getNetworkTimeUnitNum()));
         configPanel.add(new JLabel("USER_SPAWN_SCENARIO: " + configData.getUserSpawnScenario()));
         configPanel.add(new JLabel("TIME_UNIT_NUM: " + configData.getTimeUnitNum()));
         configPanel.add(new JLabel("useCostDifRandomization: " + configData.getUseCostDifRandomization()));
@@ -207,13 +223,15 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
         startButton = new JButton("start");
 
         buttonPanel.setLayout(new GridLayout(1, 3, 0, 0));
-        buttonPanel.add(startButton);
 
         slider = new JSlider(JSlider.HORIZONTAL, 0, (int) configData.getEndTime(), 0);
         slider.setMajorTickSpacing(10);
         valueLabel = new JLabel("current time: 0");
 
         slider.addChangeListener(this);
+
+        nodeButton = new JButton("node");
+        linkButton = new JButton("link");
 
         this.comboBox = new JComboBox<>();
         comboBox.addActionListener(this);
@@ -222,8 +240,11 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
             comboBox.addItem(outputFileNames.get(i));
         }
 
+        buttonPanel.add(startButton);
         buttonPanel.add(slider);
         buttonPanel.add(valueLabel);
+        buttonPanel.add(nodeButton);
+        buttonPanel.add(linkButton);
         buttonPanel.add(comboBox);
     }
 

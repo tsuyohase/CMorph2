@@ -11,6 +11,7 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cmorph.logger.SimulationData;
 import cmorph.logger.ConfigData;
+import cmorph.logger.LinkState;
 import cmorph.logger.UserState;
 import cmorph.logger.NodeState;
 import cmorph.logger.TimeStepData;
@@ -124,15 +125,6 @@ public class MainPanelDrawer extends Thread {
         threadGraphics.drawLine((int) x, (int) y, endX, endY);
     }
 
-    private UserState getUserStateById(List<UserState> userStates, int id) {
-        for (int i = 0; i < userStates.size(); i++) {
-            if (userStates.get(i).getUserId() == id) {
-                return userStates.get(i);
-            }
-        }
-        return null;
-    }
-
     private void draw() {
         threadGraphics.setColor(Color.WHITE);
         threadGraphics.fillRect(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
@@ -144,7 +136,7 @@ public class MainPanelDrawer extends Thread {
 
         for (int i = 0; i < nodeStates.size(); i++) {
             int nodeSize = nodeSizeBase;
-            if (nodeStates.get(i).getContainerNum() > configData.getAveMDCContainerNum()) {
+            if (configData.getNodeContainerNumList().get(i) > configData.getAveMDCContainerNum()) {
                 nodeSize = (int) (3 * nodeSizeBase / 2);
             }
             NodeState nodeState = nodeStates.get(i);
@@ -155,6 +147,22 @@ public class MainPanelDrawer extends Thread {
             threadGraphics.setColor(LoadColor(nodeState.getLoad()));
             threadGraphics.fillOval(nodeX, nodeY, nodeSize, nodeSize);
             threadGraphics.drawString(String.valueOf(i), nodeX, nodeY);
+        }
+
+        List<LinkState> linkStates = stepData.getLinkStates();
+
+        for (int i = 0; i < linkStates.size(); i++) {
+            int linkWidth = (int) configData.getLinkBandWidthList().get(i) / 50;
+            LinkState linkState = linkStates.get(i);
+            int nodeX1 = convertPoint(configData.getNodeXList().get(configData.getLinkSrcList().get(i)));
+            int nodeY1 = convertPoint(configData.getNodeYList().get(configData.getLinkSrcList().get(i)));
+            int nodeX2 = convertPoint(configData.getNodeXList().get(configData.getLinkDstList().get(i)));
+            int nodeY2 = convertPoint(configData.getNodeYList().get(configData.getLinkDstList().get(i)));
+            threadGraphics.setColor(LoadColor(linkState.getLoad()));
+            threadGraphics.setStroke(new BasicStroke(linkWidth));
+            threadGraphics.drawLine(nodeX1, nodeY1, nodeX2, nodeY2);
+            threadGraphics.setColor(Color.LIGHT_GRAY);
+            threadGraphics.drawString(String.valueOf(i), (nodeX1 + nodeX2) / 2, (nodeY1 + nodeY2) / 2);
 
         }
 

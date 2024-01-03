@@ -1,9 +1,11 @@
 package cmorph.setUp;
 
+import static cmorph.settings.SimulationConfiguration.BAND_WIDTH;
 import static cmorph.settings.SimulationConfiguration.DATA_CENTER_NUM;
 import static cmorph.settings.SimulationConfiguration.MICRO_DATA_CENTER_NUM;
 import static cmorph.settings.SimulationConfiguration.USER_NUM;
 
+import cmorph.entities.Link;
 import cmorph.entities.Node;
 import cmorph.entities.User;
 import cmorph.event.JobEvent;
@@ -12,6 +14,7 @@ import cmorph.setUp.UserSetUp.Scenario;
 import cmorph.simulator.Simulator;
 import cmorph.simulator.Timer;
 import cmorph.utils.Point;
+import java.util.ArrayList;
 
 public class SetUp {
     /**
@@ -19,6 +22,7 @@ public class SetUp {
      */
     public static void setUp() {
         setUpNodes();
+        setUpLinks();
         setUpUsers();
     }
 
@@ -32,8 +36,25 @@ public class SetUp {
         for (int id = 0; id < MICRO_DATA_CENTER_NUM + DATA_CENTER_NUM; id++) {
             Point nodeLocation = NodeSetUp.getNodeLocation(id);
             int containerNum = NodeSetUp.getNodeContainerNum(id);
-            Node node = new Node(id, nodeLocation, containerNum);
+            int costWeight = NodeSetUp.getNodeCostWeight(id);
+            Node node = new Node(id, nodeLocation, containerNum, costWeight);
             Simulator.addNode(node);
+        }
+    }
+
+    private static void setUpLinks() {
+        int id = 0;
+        ArrayList<Node> nodes = Simulator.getSimulatedNodes();
+        for (int i = 0; i < MICRO_DATA_CENTER_NUM + DATA_CENTER_NUM; i++) {
+            for (int j = 0; j < MICRO_DATA_CENTER_NUM + DATA_CENTER_NUM; j++) {
+                int bandwidth = BAND_WIDTH[i][j];
+                if (bandwidth == 0) {
+                    continue;
+                }
+                Link link = new Link(id, nodes.get(i), nodes.get(j), bandwidth);
+                Simulator.addLink(link);
+                id++;
+            }
         }
     }
 

@@ -4,11 +4,16 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import cmorph.entities.Link;
 import cmorph.entities.Node;
 import cmorph.entities.User;
+import cmorph.settings.SimulationConfiguration;
 import cmorph.simulator.Simulator;
+import cmorph.simulator.Timer;
 
 import static cmorph.settings.SimulationConfiguration.END_TIME;
+import static cmorph.settings.SimulationConfiguration.NETWORK_TIME_UNIT_NUM;
+import static cmorph.settings.SimulationConfiguration.TIME_UNIT_NUM;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -17,6 +22,7 @@ import java.util.ArrayList;
 
 public class Logger {
 
+    private static long lastAddedTime = 0;
     private static SimulationData simulationData = new SimulationData();
 
     public static void log() {
@@ -40,6 +46,9 @@ public class Logger {
     }
 
     private static OutputData getOutputData() {
+        for (long time = lastAddedTime; time <= SimulationConfiguration.END_TIME; time++) {
+            simulationData.addTimeStepData(getTimeStepData(time));
+        }
         ConfigData configData = new ConfigData(Simulator.getSimulatedNodes());
         return new OutputData(configData, simulationData);
     }
@@ -48,20 +57,33 @@ public class Logger {
         for (long time = startTime; time < endTime; time++) {
             simulationData.addTimeStepData(getTimeStepData(time));
         }
+        lastAddedTime = endTime;
     }
 
     private static TimeStepData getTimeStepData(long time) {
         List<UserState> userStates = new ArrayList<>();
         List<NodeState> nodeStates = new ArrayList<>();
+        List<LinkState> linkStates = new ArrayList<>();
         for (User user : Simulator.getSimulatedUsers()) {
             userStates.add(new UserState(user.getUserId(), user.getScenario().apply(time).getX(),
                     user.getScenario().apply(time).getY()));
         }
         for (Node node : Simulator.getSimulatedNodes()) {
-            nodeStates.add(new NodeState(node.getNodeId(), node.getLocation().getX(), node.getLocation().getY(),
-                    node.getLoad(time), node.getContainerNum()));
+            nodeStates.add(new NodeState(node.getLoad(time)));
         }
-        return new TimeStepData(userStates, nodeStates);
+        for (Link link : Simulator.getSimulatedLinks()) {
+            double loadAve = 0;
+            for (int j = 0; j < NETWORK_TIME_UNIT_NUM; j++) {
+                if (time - j - 1 < 0) {
+                    break;
+                }
+                loadAve += link.getLoad(time - j);
+            }
+            loadAve /= Math.min(NETWORK_TIME_UNIT_NUM, time + 1);
+            linkStates.add(new LinkState(loadAve));
+        }
+
+        return new TimeStepData(userStates, nodeStates, linkStates);
     }
 
 }

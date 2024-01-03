@@ -1,5 +1,6 @@
 package cmorph.job;
 
+import static cmorph.settings.SimulationConfiguration.AVE_DATA_OBJECT_SIZE;
 import static cmorph.settings.SimulationConfiguration.AVE_JOB_TIME_SLOT;
 import static cmorph.settings.SimulationConfiguration.RANDOMIZE_RATE;
 import static cmorph.settings.SimulationConfiguration.RANDOM_JOB_TIME_SLOT;
@@ -15,6 +16,7 @@ public class Job {
     private double frontWeight;
     private double backWeight;
     private int timeSlotNum;
+    private int dataObjectSize;
 
     /**
      * Job
@@ -25,15 +27,17 @@ public class Job {
      * @param frontWeight
      * @param backWeight
      * @param timeSlotNum
+     * @param dataObjectSize
      */
     public Job(User user, Node dataObjectNode, int useContainerNum, double frontWeight, double backWeight,
-            int timeSlotNum) {
+            int timeSlotNum, int dataObjectSize) {
         this.user = user;
         this.dataObjectNode = dataObjectNode;
         this.useContainerNum = useContainerNum;
         this.frontWeight = frontWeight;
         this.backWeight = backWeight;
         this.timeSlotNum = timeSlotNum;
+        this.dataObjectSize = dataObjectSize;
     }
 
     public User getUser() {
@@ -60,6 +64,10 @@ public class Job {
         return timeSlotNum;
     }
 
+    public int getDataObjectSize() {
+        return dataObjectSize;
+    }
+
     /**
      * 次のJobを生成する
      * 
@@ -75,6 +83,6 @@ public class Job {
         }
 
         return new Job(this.user, this.dataObjectNode, this.useContainerNum, this.frontWeight, this.backWeight,
-                nextJobTimeSlot);
+                nextJobTimeSlot, AVE_DATA_OBJECT_SIZE);
     }
 }

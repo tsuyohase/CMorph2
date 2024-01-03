@@ -4,7 +4,7 @@ import static cmorph.settings.SimulationConfiguration.AVE_JOB_TIME_SLOT;
 import static cmorph.settings.SimulationConfiguration.RANDOM_JOB_TIME_SLOT;
 import static cmorph.simulator.Main.random;
 
-import cmorph.entities.AllocationServer;
+import cmorph.allocator.AllocationServer;
 import cmorph.job.Job;
 import cmorph.simulator.Timer;
 
@@ -22,6 +22,7 @@ public class JobEvent implements Event {
     }
 
     public void run() {
+
         AllocationServer.updateState();
         AllocationServer.allocateJob(this.job);
 

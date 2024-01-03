@@ -3,6 +3,7 @@ package cmorph.entities;
 import cmorph.job.Job;
 import cmorph.simulator.Timer;
 import cmorph.utils.Point;
+import cmorph.utils.ScheduledJob;
 
 import java.util.List;
 import java.sql.Time;
@@ -14,50 +15,12 @@ public class Node {
     private final int nodeId;
     private final Point location;
     private final int containerNum;
+    private final int costWeight;
 
     /**
      * ノードに割り当てられたジョブを終了時間の遅い順で並べた配列
      */
     private ArrayList<ScheduledJob> allocatedJobs = new ArrayList<>();
-
-    /**
-     * 割り当てられたジョブを終了時間で管理するためのクラス
-     */
-    private static class ScheduledJob implements Comparable<ScheduledJob> {
-        private final Job job;
-        private final long startTime;
-        private final long endTime;
-
-        private ScheduledJob(Job job, long startTime, long endTime) {
-            this.job = job;
-            this.startTime = startTime;
-            this.endTime = endTime;
-        }
-
-        private Job getJob() {
-            return this.job;
-        }
-
-        private long getStartTime() {
-            return this.startTime;
-        }
-
-        private long getEndTime() {
-            return this.endTime;
-        }
-
-        public int compareTo(ScheduledJob o) {
-            if (this.equals(o)) {
-                return 0;
-            }
-            int order = Long.signum(o.endTime - this.endTime);
-            if (order != 0) {
-                return order;
-            }
-            order = System.identityHashCode(this) - System.identityHashCode(o);
-            return order;
-        }
-    }
 
     /**
      * ノード(MDC, DC)
@@ -66,10 +29,11 @@ public class Node {
      * @param location
      * @param containerNum
      */
-    public Node(int nodeId, Point location, int containerNum) {
+    public Node(int nodeId, Point location, int containerNum, int costWeight) {
         this.nodeId = nodeId;
         this.location = location;
         this.containerNum = containerNum;
+        this.costWeight = costWeight;
     }
 
     /**
@@ -157,5 +121,9 @@ public class Node {
 
     public int getContainerNum() {
         return this.containerNum;
+    }
+
+    public int getCostWeight() {
+        return this.costWeight;
     }
 }

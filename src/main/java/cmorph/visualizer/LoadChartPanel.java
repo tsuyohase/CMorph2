@@ -15,23 +15,30 @@ import java.util.Random;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cmorph.logger.SimulationData;
+import cmorph.entities.Link;
 import cmorph.logger.ConfigData;
+import cmorph.logger.LinkState;
 import cmorph.logger.NodeState;
 import cmorph.logger.TimeStepData;
 
 public class LoadChartPanel extends JPanel {
     List<TimeStepData> data;
     ConfigData configData;
-    List<Double> loads;
+    List<Double> nodeLoads;
+    List<Double> linkLoads;
     BufferedImage bufferedImage;
     Graphics2D bufferedGraphics;
     int margin;
-    List<Color> colors;
-    List<String> legend;
+    List<Color> nodeColors;
+    List<Color> linkColors;
+    List<String> nodeLegend;
+    List<String> linkLegend;
     int currentTime;
     boolean changeData;
+    boolean isNode;
+    boolean isLink;
 
-    public LoadChartPanel(int size, List<TimeStepData> data, ConfigData configData) {
+    public LoadChartPanel(int size, List<TimeStepData> data, ConfigData configData, boolean isNode, boolean isLink) {
         this.margin = size / 10;
 
         setPreferredSize(new Dimension((int) size, size / 2));
@@ -43,25 +50,10 @@ public class LoadChartPanel extends JPanel {
         bufferedGraphics.setColor(Color.WHITE);
         bufferedGraphics.fillRect(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
 
-        this.data = data;
         this.configData = configData;
-        List<NodeState> initLoads = this.data.get(0).getNodeStates();
-        this.loads = new ArrayList<>();
-        this.colors = new ArrayList<>();
-        this.legend = new ArrayList<>();
-        this.changeData = true;
-
-        // サーバーごとに異なる色を設定
-        Random rand = new Random(26);
-        for (int i = 0; i < initLoads.size(); i++) {
-            loads.add(initLoads.get(i).getLoad());
-            colors.add(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
-            if (initLoads.get(i).getContainerNum() > configData.getAveMDCContainerNum()) {
-                legend.add("DC " + i);
-            } else {
-                legend.add("MDC " + i);
-            }
-        }
+        this.isNode = isNode;
+        this.isLink = isLink;
+        setData(data, configData);
     }
 
     private int convertLoad(double load, int graphHeight) {
@@ -80,24 +72,40 @@ public class LoadChartPanel extends JPanel {
         this.currentTime = currentTime;
     }
 
-    public void setData(List<TimeStepData> data) {
+    public void change(boolean isNode, boolean isLink) {
+        this.isNode = isNode;
+        this.isLink = isLink;
+        setData(data, configData);
+    }
+
+    public void setData(List<TimeStepData> data, ConfigData configData) {
         this.data = data;
-        List<NodeState> initLoads = this.data.get(0).getNodeStates();
-        this.loads = new ArrayList<>();
-        this.colors = new ArrayList<>();
-        this.legend = new ArrayList<>();
+        this.configData = configData;
+        this.nodeLoads = new ArrayList<>();
+        this.linkLoads = new ArrayList<>();
+        this.nodeColors = new ArrayList<>();
+        this.linkColors = new ArrayList<>();
+        this.nodeLegend = new ArrayList<>();
+        this.linkLegend = new ArrayList<>();
         this.changeData = true;
 
         // サーバーごとに異なる色を設定
         Random rand = new Random(26);
-        for (int i = 0; i < initLoads.size(); i++) {
-            loads.add(initLoads.get(i).getLoad());
-            colors.add(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
-            if (initLoads.get(i).getContainerNum() > configData.getAveMDCContainerNum()) {
-                legend.add("DC " + i);
+        for (int i = 0; i < configData.getDataCenterNum() + configData.getMicroDataCenterNum(); i++) {
+            nodeLoads.add(data.get(0).getNodeStates().get(i).getLoad());
+            nodeColors.add(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
+            if (configData.getNodeContainerNumList().get(i) > configData.getAveMDCContainerNum()) {
+                nodeLegend.add("DC " + i);
             } else {
-                legend.add("MDC " + i);
+                nodeLegend.add("MDC " + i);
             }
+        }
+        rand = new Random(28);
+
+        for (int i = 0; i < configData.getLinkBandWidthList().size(); i++) {
+            linkLoads.add(data.get(0).getLinkStates().get(i).getLoad());
+            linkColors.add(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
+            linkLegend.add("Link " + i);
         }
     }
 
@@ -144,35 +152,65 @@ public class LoadChartPanel extends JPanel {
         g.fillRect(margin + 1, convertLoad(0.75, graphHeight), graphWidth, (getHeight() - margin * 2) / 2);
 
         for (int t = 1; t < data.size(); t++) {
-            for (int i = 0; i < data.get(t).getNodeStates().size(); i++) {
-                double load = data.get(t).getNodeStates().get(i).getLoad();
-                int x1 = convertTime(t - 1, graphWidth);
-                int y1 = convertLoad(loads.get(i), graphHeight);
-                int x2 = convertTime(t, graphWidth);
-                int y2 = convertLoad(load, graphHeight);
+            if (isNode) {
+                for (int i = 0; i < data.get(t).getNodeStates().size(); i++) {
+                    double load = data.get(t).getNodeStates().get(i).getLoad();
+                    int x1 = convertTime(t - 1, graphWidth);
+                    int y1 = convertLoad(nodeLoads.get(i), graphHeight);
+                    int x2 = convertTime(t, graphWidth);
+                    int y2 = convertLoad(load, graphHeight);
 
-                g.setColor(colors.get(i)); // サーバーごとに色を設定
-                g.drawLine(x1, y1, x2, y2);
-                g.drawLine(x1 + 1, y1, x2 + 1, y2);
+                    g.setColor(nodeColors.get(i)); // サーバーごとに色を設定
+                    g.drawLine(x1, y1, x2, y2);
+                    g.drawLine(x1 + 1, y1, x2 + 1, y2);
 
-                loads.set(i, load);
+                    nodeLoads.set(i, load);
+                }
             }
+            if (isLink) {
+                for (int i = 0; i < data.get(t).getLinkStates().size(); i++) {
+                    double load = data.get(t).getLinkStates().get(i).getLoad();
+                    int x1 = convertTime(t - 1, graphWidth);
+                    int y1 = convertLoad(linkLoads.get(i), graphHeight);
+                    int x2 = convertTime(t, graphWidth);
+                    int y2 = convertLoad(load, graphHeight);
+
+                    g.setColor(linkColors.get(i)); // サーバーごとに色を設定
+                    g.drawLine(x1, y1, x2, y2);
+                    g.drawLine(x1 + 1, y1, x2 + 1, y2);
+
+                    linkLoads.set(i, load);
+                }
+            }
+
         }
 
         // time line
         int currentTimeX = convertTime(currentTime, graphWidth);
+        g.setColor(Color.BLACK);
         g.drawLine(currentTimeX, margin, currentTimeX, getHeight() - margin);
 
         // 凡例を描画
         g.setColor(Color.BLACK);
         int legendX = getWidth() - margin;
         int legendY = margin + 15;
-        for (int i = 0; i < legend.size(); i++) {
-            g.setColor(colors.get(i));
-            g.fillRect(legendX, legendY, 10, 10);
-            g.setColor(Color.BLACK);
-            g.drawString(legend.get(i), legendX + 15, legendY + 10);
-            legendY += 20;
+        if (isNode) {
+            for (int i = 0; i < nodeLegend.size(); i++) {
+                g.setColor(nodeColors.get(i));
+                g.fillRect(legendX, legendY, 10, 10);
+                g.setColor(Color.BLACK);
+                g.drawString(nodeLegend.get(i), legendX + 15, legendY + 10);
+                legendY += 20;
+            }
+        }
+        if (isLink) {
+            for (int i = 0; i < linkLegend.size(); i++) {
+                g.setColor(linkColors.get(i));
+                g.fillRect(legendX, legendY, 10, 10);
+                g.setColor(Color.BLACK);
+                g.drawString(linkLegend.get(i), legendX + 15, legendY + 10);
+                legendY += 20;
+            }
         }
     }
 }

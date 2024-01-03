@@ -24,6 +24,7 @@ public class UserSetUp {
      */
     public static enum UserLocationScenario {
         STAY,
+        UP_LEFT_STAY,
         RANDOM_LOCATION_SATY,
         STRAIGHT_DOWN,
         RANDOM,
@@ -97,6 +98,12 @@ public class UserSetUp {
         if (USER_LOCATION_SCENARIO == UserLocationScenario.STAY) {
             // 中心に配置
             initPoint = new Point(MAP_WIDTH / 2, MAP_WIDTH / 2);
+
+            // 移動しないシナリオ
+            return getStayScenario(initPoint, spawnTime, despawnTime);
+        } else if (USER_LOCATION_SCENARIO == UserLocationScenario.UP_LEFT_STAY) {
+            // 左上に配置
+            initPoint = new Point(0, 0);
 
             // 移動しないシナリオ
             return getStayScenario(initPoint, spawnTime, despawnTime);
