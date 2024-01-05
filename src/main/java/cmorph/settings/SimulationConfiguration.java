@@ -27,10 +27,10 @@ public class SimulationConfiguration {
     public static final int FRONT_WEIGHT = 1;
     public static final int BACK_WEIGHT = 0;
     public static final DataObjectTargetType DATA_OBJECT_TARGET_TYPE = DataObjectTargetType.LAST_NODE;
-    public static final int AVE_DATA_OBJECT_SIZE = 10000 / USER_NUM; // Kbit
+    public static final int AVE_DATA_OBJECT_SIZE = 18000 / USER_NUM; // Kbit
 
     // Node
-    public static final int MICRO_DATA_CENTER_NUM = 4;
+    public static final int MICRO_DATA_CENTER_NUM = 5;
     public static final int DATA_CENTER_NUM = 0;
     public static final int AVE_MDC_CONTAINER_NUM = 30 * USER_NUM;
     public static final int AVE_DC_CONTAINER_NUM = 10 * USER_NUM;
@@ -40,15 +40,15 @@ public class SimulationConfiguration {
     // Network
     // 帯域幅、単位はK bit / msec (= M bit / sec)
     public static final int[][] BAND_WIDTH = new int[][] {
-            { 0, 1000, 1000, 0 },
-            { 0, 0, 0, 1000 },
-            { 0, 0, 0, 1000 },
-            { 0, 0, 0, 0 },
-            // { 0, 1000, 0, 1000, 0 },
-            // { 0, 0, 1000, 1000, 500 },
-            // { 0, 0, 0, 0, 1000 },
-            // { 0, 0, 0, 0, 1000 },
-            // { 0, 0, 0, 0, 0 },
+            // { 0, 1000, 500, 0 },
+            // { 0, 0, 0, 1000 },
+            // { 0, 0, 0, 500 },
+            // { 0, 0, 0, 0 },
+            { 0, 1000, 0, 1000, 0 },
+            { 0, 0, 1000, 1000, 500 },
+            { 0, 0, 0, 0, 1000 },
+            { 0, 0, 0, 0, 1000 },
+            { 0, 0, 0, 0, 0 },
     };
     public static final NetworkCostFunctionType NETWORK_COST_FUNCTION_TYPE = NetworkCostFunctionType.MONOTONIC;
     public static final int NETWORK_TIME_UNIT_NUM = 100;
@@ -62,5 +62,5 @@ public class SimulationConfiguration {
     public static final int ELAPSED_TIME_THRESHOLD = 5000;
     // Simulator
     public static final long END_TIME = 10000; // msec
-    public static final boolean simulateNetwork = false;
+    public static final boolean simulateNetwork = true;
 }

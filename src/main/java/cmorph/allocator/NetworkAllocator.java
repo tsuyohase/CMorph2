@@ -1,6 +1,6 @@
 package cmorph.allocator;
 
-import static cmorph.settings.SimulationConfiguration.NETWORK_TIME_UNIT_NUM;
+import static cmorph.settings.SimulationConfiguration.TIME_UNIT_NUM;
 import static cmorph.settings.SimulationConfiguration.USER_NUM;
 
 import java.util.ArrayList;
@@ -26,14 +26,14 @@ public class NetworkAllocator {
 
             // リンクの負荷を更新
             double loadAverage = 0;
-            for (int j = 0; j < NETWORK_TIME_UNIT_NUM; j++) {
+            for (int j = 0; j < TIME_UNIT_NUM; j++) {
                 if (time - j >= 0) {
                     loadAverage += link.getLoad(time - j);
                 } else {
                     break;
                 }
             }
-            loadAverage /= Math.min(NETWORK_TIME_UNIT_NUM, time + 1);
+            loadAverage /= Math.min(TIME_UNIT_NUM, time + 1);
             linkLoads.set(i, loadAverage);
         }
     }
@@ -61,6 +61,9 @@ public class NetworkAllocator {
      */
     public static double getBackendPathCost(ArrayList<Integer> path) {
         double cost = 0;
+        if (path == null) {
+            return Double.MAX_VALUE;
+        }
         for (int i = 0; i < path.size(); i++) {
             cost += PseudoCostFunctions.getNetworkCost(linkLoads.get(path.get(i)));
         }

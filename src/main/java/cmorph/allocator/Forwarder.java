@@ -46,7 +46,9 @@ public class Forwarder {
     public static void forward(Job job, int bestNodeId, ArrayList<Integer> bestBackendPath,
             double bestCost) {
         if (bestNodeId == -1) {
-            System.err.println("Overflow");
+            System.err.println("Node Overflow");
+        } else if (bestBackendPath == null) {
+            System.err.println("Network Overflow");
         } else {
             int userId = job.getUser().getUserId();
             double lastCost;
@@ -79,7 +81,7 @@ public class Forwarder {
                 }
             }
 
-            // 割り当て先を変更する
+            // 割り当て先を変更するかどうか
             if (random.nextDouble() < migrateProbability) {
                 // 変更する場合
                 allocatedNodeList.set(userId, bestNodeId);

@@ -1,5 +1,7 @@
 package cmorph.entities;
 
+import static cmorph.settings.SimulationConfiguration.NETWORK_TIME_UNIT_NUM;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -59,19 +61,17 @@ public class Link {
     }
 
     /**
-     * timeの時点で実行中のジョブを取得する関数
+     * timeからtimeUnitNumの範囲で実行中のジョブを取得する関数
      * 
      * @param time
      * @return
      */
-    public ArrayList<Job> getRunningJobs(long time) {
+    public ArrayList<Job> getRunningJobs(long time, long timeUnitNum) {
         ArrayList<Job> runningJobs = new ArrayList<>();
         for (int i = 0; i < this.transferJobs.size(); i++) {
             ScheduledJob scheduledJob = this.transferJobs.get(i);
-            if ((scheduledJob.getStartTime() <= time) && (time <= scheduledJob.getEndTime())) {
-                if (scheduledJob.getJob().getUser().isActive(time)) {
-                    runningJobs.add(scheduledJob.getJob());
-                }
+            if ((time - timeUnitNum <= scheduledJob.getStartTime()) && (scheduledJob.getStartTime() <= time)) {
+                runningJobs.add(scheduledJob.getJob());
             }
         }
         return runningJobs;
@@ -84,12 +84,13 @@ public class Link {
      * @return
      */
     public double getLoad(long time) {
-        ArrayList<Job> runningJobs = getRunningJobs(time);
+        ArrayList<Job> runningJobs = getRunningJobs(time, NETWORK_TIME_UNIT_NUM);
         int transferDataSize = 0;
         for (int i = 0; i < runningJobs.size(); i++) {
             transferDataSize += runningJobs.get(i).getDataObjectSize();
         }
-        double load = Math.min(1, (double) transferDataSize / (double) this.bandwidth);
+        double maxTransferDataSize = this.bandwidth * Math.min(NETWORK_TIME_UNIT_NUM, time + 1);
+        double load = Math.min(1, (double) transferDataSize / maxTransferDataSize);
         return load;
     }
 
@@ -97,7 +98,7 @@ public class Link {
         int transferDataSize = 0;
         for (int i = 0; i < this.transferJobs.size(); i++) {
             ScheduledJob scheduledJob = this.transferJobs.get(i);
-            if ((time <= scheduledJob.getEndTime())) {
+            if ((scheduledJob.getStartTime() <= time) && (time <= scheduledJob.getEndTime())) {
                 if (scheduledJob.getJob().getUser().isActive(time)) {
                     transferDataSize += scheduledJob.getJob().getDataObjectSize();
                 }
