@@ -31,13 +31,15 @@ public class MainPanelDrawer extends Thread {
     boolean isPlaying;
     int userSize;
     int nodeSizeBase;
+    int speed;
 
-    public MainPanelDrawer(MainPanel mainPanel, int currentTime, boolean isPlaying,
+    public MainPanelDrawer(MainPanel mainPanel, int currentTime, boolean isPlaying, int speed,
             JSlider slider, List<TimeStepData> data, ConfigData configData) {
         this.data = data;
         this.configData = configData;
         this.currentTime = currentTime;
         this.isPlaying = isPlaying;
+        this.speed = speed;
         this.slider = slider;
         this.mainPanel = mainPanel;
         this.bufferedImage = mainPanel.bufferedImage;
@@ -69,14 +71,41 @@ public class MainPanelDrawer extends Thread {
     }
 
     public static Color LoadColor(double load) {
+        int gray_r = 204;
+        int gray_g = 204;
+        int gray_b = 204;
+
+        int green_r = 0;
+        int green_g = 255;
+        int green_b = 51;
+
+        int blue_r = 51;
+        int blue_g = 153;
+        int blue_b = 255;
+
+        int red_r = 255;
+        int red_g = 51;
+        int red_b = 51;
+
+        int dred_r = 50;
+        int dred_g = 0;
+        int dred_b = 0;
         if (load == 0) {
-            return Color.GRAY;
+            return new Color(gray_r, gray_g, gray_b);
         } else if (load < 0.25) {
-            return Color.GREEN;
+            return new Color(green_r, green_g, green_b);
+        } else if (load < 0.5) {
+            double r = (load - 0.25) / 0.25;
+            return new Color((int) (green_r * (1 - r) + r * blue_r), (int) (green_g * (1 - r) + blue_g * r),
+                    (int) (green_b * (1 - r) + blue_b * r));
         } else if (load < 0.75) {
-            return Color.BLUE;
+            double r = (load - 0.5) / 0.25;
+            return new Color((int) (blue_r * (1 - r) + r * red_r), (int) (blue_g * (1 - r) + red_g * r),
+                    (int) (blue_b * (1 - r) + red_b * r));
         } else {
-            return Color.RED;
+            double r = (load - 0.75) / 0.25;
+            return new Color((int) (red_r * (1 - r) + r * dred_r), (int) (red_g * (1 - r) + dred_g * r),
+                    (int) (red_b * (1 - r) + dred_b * r));
         }
     }
 
@@ -185,7 +214,7 @@ public class MainPanelDrawer extends Thread {
     public void run() {
         while (isPlaying && currentTime < data.size()) {
             draw();
-            currentTime++;
+            currentTime += speed;
             slider.setValue(currentTime);
 
             try {

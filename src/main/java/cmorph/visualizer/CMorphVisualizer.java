@@ -24,6 +24,7 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
     OutputData outputData;
     JButton startButton;
     JSlider slider;
+    JSlider speedSlider;
     JComboBox<String> comboBox;
     JButton nodeButton;
     JButton linkButton;
@@ -35,8 +36,10 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
     JPanel configPanel;
     JPanel buttonPanel;
     JLabel valueLabel;
+    JLabel speedLabel;
     MainPanelDrawer mainPanelDrawer;
     int currentTime = 0;
+    int speed = 1;
     ChartPanelDrawer loadChartPanelDrawer;
     List<TimeStepData> data;
     ConfigData configData;
@@ -106,7 +109,8 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
                 mainPanelDrawer.stopUser();
                 startButton.setText("start");
             } else {
-                mainPanelDrawer = new MainPanelDrawer(mainPanel, currentTime, true, slider, data, configData);
+                mainPanelDrawer = new MainPanelDrawer(mainPanel, currentTime, true, this.speed, slider, data,
+                        configData);
                 mainPanelDrawer.start();
                 startButton.setText("stop");
 
@@ -131,7 +135,7 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
                 mainPanelDrawer.stopUser();
             }
             currentTime = 0;
-            mainPanelDrawer = new MainPanelDrawer(mainPanel, currentTime, false, slider, data, configData);
+            mainPanelDrawer = new MainPanelDrawer(mainPanel, currentTime, false, this.speed, slider, data, configData);
             mainPanelDrawer.start();
 
             slider.setMaximum((int) configData.getEndTime());
@@ -152,25 +156,33 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        JSlider source = (JSlider) e.getSource();
-        this.currentTime = source.getValue();
-        valueLabel.setText("current time: " + this.currentTime);
+        if (e.getSource() == speedSlider) {
+            JSlider source = (JSlider) e.getSource();
+            this.speed = source.getValue();
+            speedLabel.setText("speed: " + this.speed);
+        } else if (e.getSource() == slider) {
+            JSlider source = (JSlider) e.getSource();
+            this.currentTime = source.getValue();
+            valueLabel.setText("current time: " + this.currentTime);
 
-        if (this.mainPanelDrawer == null) {
-            mainPanelDrawer = new MainPanelDrawer(mainPanel, this.currentTime, false, slider, data, configData);
-            mainPanelDrawer.start();
-        } else if (this.mainPanelDrawer.currentTime != this.currentTime) {
-            mainPanelDrawer.stopUser();
-            mainPanelDrawer = new MainPanelDrawer(mainPanel, this.currentTime, false, slider, data, configData);
-            mainPanelDrawer.start();
-            startButton.setText("start");
-        }
-        loadChartPanelDrawer.setCurrentTime(currentTime);
-        // loadChartPanelDrawer.start();
-        if (this.currentTime == configData.getEndTime()) {
-            this.currentTime = 0;
-            mainPanelDrawer.stopUser();
-            startButton.setText("start");
+            if (this.mainPanelDrawer == null) {
+                mainPanelDrawer = new MainPanelDrawer(mainPanel, this.currentTime, false, this.speed, slider, data,
+                        configData);
+                mainPanelDrawer.start();
+            } else if (this.mainPanelDrawer.currentTime != this.currentTime) {
+                mainPanelDrawer.stopUser();
+                mainPanelDrawer = new MainPanelDrawer(mainPanel, this.currentTime, false, this.speed, slider, data,
+                        configData);
+                mainPanelDrawer.start();
+                startButton.setText("start");
+            }
+            loadChartPanelDrawer.setCurrentTime(currentTime);
+            // loadChartPanelDrawer.start();
+            if (this.currentTime == configData.getEndTime()) {
+                this.currentTime = 0;
+                mainPanelDrawer.stopUser();
+                startButton.setText("start");
+            }
         }
 
     }
@@ -222,13 +234,18 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
     private void setButtonPanel() {
         startButton = new JButton("start");
 
-        buttonPanel.setLayout(new GridLayout(1, 3, 0, 0));
+        buttonPanel.setLayout(new FlowLayout());
 
         slider = new JSlider(JSlider.HORIZONTAL, 0, (int) configData.getEndTime(), 0);
         slider.setMajorTickSpacing(10);
         valueLabel = new JLabel("current time: 0");
 
         slider.addChangeListener(this);
+
+        speedSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 1);
+        slider.setMajorTickSpacing(1);
+        speedLabel = new JLabel("speed: 1");
+        speedSlider.addChangeListener(this);
 
         nodeButton = new JButton("node");
         linkButton = new JButton("link");
@@ -243,6 +260,8 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
         buttonPanel.add(startButton);
         buttonPanel.add(slider);
         buttonPanel.add(valueLabel);
+        buttonPanel.add(speedSlider);
+        buttonPanel.add(speedLabel);
         buttonPanel.add(nodeButton);
         buttonPanel.add(linkButton);
         buttonPanel.add(comboBox);
