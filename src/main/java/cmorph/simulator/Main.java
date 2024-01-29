@@ -15,7 +15,6 @@ public class Main {
      */
     public static void main(String[] args) {
         SetUp.setUp();
-
         while (Timer.getEvent() != null) {
             Timer.runEvent();
         }

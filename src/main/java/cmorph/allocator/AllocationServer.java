@@ -2,6 +2,7 @@ package cmorph.allocator;
 
 import static cmorph.settings.SimulationConfiguration.NETWORK_TIME_UNIT_NUM;
 import static cmorph.settings.SimulationConfiguration.USER_NUM;
+import static cmorph.settings.SimulationConfiguration.fixedNodeAllocation;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -66,11 +67,20 @@ public class AllocationServer {
         ArrayList<Node> simulatedNodes = Simulator.getSimulatedNodes();
 
         for (int i = 0; i < simulatedNodes.size(); i++) {
+            // ノードの割り当てを更新するかどうか
+            int nodeId;
+            if (fixedNodeAllocation) {
+                nodeId = 0;
+                i = simulatedNodes.size();
+            } else {
+                nodeId = i;
+            }
+
             double cost = Double.MAX_VALUE;
-            if (NodeAllocator.getRemainingContainerNums().get(i) >= job.getUseContainerNum()) {
-                double loadCost = NodeAllocator.getNodeCost(i);
+            if (NodeAllocator.getRemainingContainerNums().get(nodeId) >= job.getUseContainerNum()) {
+                double loadCost = NodeAllocator.getNodeCost(nodeId);
                 double frontendPathCost = 0;
-                ArrayList<Integer> backendPath = NetworkAllocator.getBackendPath(i,
+                ArrayList<Integer> backendPath = NetworkAllocator.getBackendPath(nodeId,
                         job.getDataObjectNode().getNodeId());
                 double backendPathCost = NetworkAllocator.getBackendPathCost(backendPath);
                 cost = loadCost * job.getUseContainerNum() + frontendPathCost * job.getFrontWeight()
@@ -78,7 +88,7 @@ public class AllocationServer {
 
                 if (cost < bestCost) {
                     bestCost = cost;
-                    bestNode = i;
+                    bestNode = nodeId;
                     bestBackendPath = backendPath;
                 }
 

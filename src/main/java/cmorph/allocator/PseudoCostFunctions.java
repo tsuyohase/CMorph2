@@ -4,7 +4,6 @@ import static cmorph.settings.SimulationConfiguration.LOAD_COST_FUNCTION_TYPE;
 import static cmorph.settings.SimulationConfiguration.NETWORK_COST_FUNCTION_TYPE;
 
 import java.util.ArrayList;
-
 import cmorph.entities.Node;
 
 public class PseudoCostFunctions {
