@@ -3,7 +3,6 @@ package cmorph.logger;
 import java.util.ArrayList;
 
 import cmorph.allocator.PseudoCostFunctions.LoadCostFunctionType;
-import cmorph.allocator.PseudoCostFunctions.NetworkCostFunctionType;
 import cmorph.entities.Node;
 import cmorph.setUp.JobSetUp.DataObjectTargetType;
 import cmorph.setUp.NodeSetUp.NodeCostWeightType;
@@ -22,13 +21,17 @@ public class ConfigData {
     private UserSpawnScenario userSpawnScenario;
 
     private boolean randomJobTimeSlot;
+    private boolean randomJobContainerNum;
     private double randomizeRate;
     private int aveJobTimeSlot;
     private int aveJobContainerNum;
-    private int frontWeight;
-    private int backWeight;
+    private int interactiveFrontWeight;
+    private int interactiveBackWeight;
+    private int dataIncentiveFrontWeight;
+    private int dataIncentiveBackWeight;
     private DataObjectTargetType dataObjectTargetType;
     private int aveDataObjectSize;
+    private double interactiveJobProbability;
 
     private int microDataCenterNum;
     private int dataCenterNum;
@@ -37,8 +40,9 @@ public class ConfigData {
     private boolean randomNodeLocation;
     private NodeCostWeightType nodeCostWeightType;
 
-    private NetworkCostFunctionType networkCostFunctionType;
-    private int networkTimeUnitNum;
+    private int costDCMDC;
+    private int costDCDC;
+    private int costMDCUser;
 
     private LoadCostFunctionType loadCostFunctionType;
     private int timeUnitNum;
@@ -55,7 +59,7 @@ public class ConfigData {
 
     private ArrayList<Integer> linkSrcList;
     private ArrayList<Integer> linkDstList;
-    private ArrayList<Integer> linkBandWidthList;
+    private ArrayList<Integer> linkCostList;
 
     public ConfigData() {
     }
@@ -67,23 +71,27 @@ public class ConfigData {
         this.userLocationScenario = SimulationConfiguration.USER_LOCATION_SCENARIO;
         this.userSpawnScenario = SimulationConfiguration.USER_SPAWN_SCENARIO;
         this.randomJobTimeSlot = SimulationConfiguration.RANDOM_JOB_TIME_SLOT;
+        this.randomJobContainerNum = SimulationConfiguration.RANDOM_JOB_CONTAINER_NUM;
         this.randomizeRate = SimulationConfiguration.RANDOMIZE_RATE;
         this.aveJobTimeSlot = SimulationConfiguration.AVE_JOB_TIME_SLOT;
         this.aveJobContainerNum = SimulationConfiguration.AVE_JOB_CONTAINER_NUM;
-        this.frontWeight = SimulationConfiguration.FRONT_WEIGHT;
-        this.backWeight = SimulationConfiguration.BACK_WEIGHT;
-        this.dataObjectTargetType = SimulationConfiguration.DATA_OBJECT_TARGET_TYPE;
+        this.interactiveFrontWeight = SimulationConfiguration.INTERACTIVE_FRONT_WEIGHT;
+        this.interactiveBackWeight = SimulationConfiguration.INTERACTIVE_BACK_WEIGHT;
+        this.dataIncentiveFrontWeight = SimulationConfiguration.DATA_INCENTIVE_BACK_WEIGHT;
+        this.dataIncentiveBackWeight = SimulationConfiguration.DATA_INCENTIVE_FRONT_WEIGHT;
         this.aveDataObjectSize = SimulationConfiguration.AVE_DATA_OBJECT_SIZE;
+        this.interactiveJobProbability = SimulationConfiguration.INTERAXTIVE_JOB_PROBABILITY;
 
         this.microDataCenterNum = SimulationConfiguration.MICRO_DATA_CENTER_NUM;
         this.dataCenterNum = SimulationConfiguration.DATA_CENTER_NUM;
         this.aveMDCContainerNum = SimulationConfiguration.AVE_MDC_CONTAINER_NUM;
         this.aveDCContainerNum = SimulationConfiguration.AVE_DC_CONTAINER_NUM;
-        this.randomNodeLocation = SimulationConfiguration.RANDOM_NODE_LOCATION;
+        this.randomNodeLocation = SimulationConfiguration.RANDOM_DC_LOCATION;
         this.nodeCostWeightType = SimulationConfiguration.NODE_COST_WEIGHT_TYPE;
 
-        this.networkCostFunctionType = SimulationConfiguration.NETWORK_COST_FUNCTION_TYPE;
-        this.networkTimeUnitNum = SimulationConfiguration.NETWORK_TIME_UNIT_NUM;
+        this.costDCDC = SimulationConfiguration.COST_DC_DC;
+        this.costDCMDC = SimulationConfiguration.COST_DC_MDC;
+        this.costMDCUser = SimulationConfiguration.COST_MDC_USER;
 
         this.loadCostFunctionType = SimulationConfiguration.LOAD_COST_FUNCTION_TYPE;
         this.timeUnitNum = SimulationConfiguration.TIME_UNIT_NUM;
@@ -104,11 +112,11 @@ public class ConfigData {
         }
         this.linkSrcList = new ArrayList<>();
         this.linkDstList = new ArrayList<>();
-        this.linkBandWidthList = new ArrayList<>();
+        this.linkCostList = new ArrayList<>();
         for (int i = 0; i < Simulator.getSimulatedLinks().size(); i++) {
             this.linkSrcList.add(Simulator.getSimulatedLinks().get(i).getConnectNode1().getNodeId());
             this.linkDstList.add(Simulator.getSimulatedLinks().get(i).getConnectNode2().getNodeId());
-            this.linkBandWidthList.add(Simulator.getSimulatedLinks().get(i).getBandWidth());
+            this.linkCostList.add(Simulator.getSimulatedLinks().get(i).getCost());
         }
     }
 
@@ -136,6 +144,10 @@ public class ConfigData {
         return randomJobTimeSlot;
     }
 
+    public boolean getRandomJobContainerNum() {
+        return randomJobContainerNum;
+    }
+
     public double getRandomizeRate() {
         return randomizeRate;
     }
@@ -148,12 +160,20 @@ public class ConfigData {
         return aveJobContainerNum;
     }
 
-    public int getFrontWeight() {
-        return frontWeight;
+    public int getInteractiveFrontWeight() {
+        return interactiveFrontWeight;
     }
 
-    public int getBackWeight() {
-        return backWeight;
+    public int getInteractiveBackWeight() {
+        return interactiveBackWeight;
+    }
+
+    public int getDataIncentiveFrontWeight() {
+        return dataIncentiveFrontWeight;
+    }
+
+    public int getDataIncentiveBackWeight() {
+        return dataIncentiveBackWeight;
     }
 
     public DataObjectTargetType getDataObjectTargetType() {
@@ -164,8 +184,24 @@ public class ConfigData {
         return aveDataObjectSize;
     }
 
+    public double getInteractiveJobProbability() {
+        return interactiveJobProbability;
+    }
+
     public int getMicroDataCenterNum() {
         return microDataCenterNum;
+    }
+
+    public int getCostDCMDC() {
+        return costDCMDC;
+    }
+
+    public int getCostDCDC() {
+        return costDCDC;
+    }
+
+    public int getCostMDCUser() {
+        return costMDCUser;
     }
 
     public int getDataCenterNum() {
@@ -190,14 +226,6 @@ public class ConfigData {
 
     public LoadCostFunctionType getLoadCostFunctionType() {
         return loadCostFunctionType;
-    }
-
-    public NetworkCostFunctionType getNetworkCostFunctionType() {
-        return networkCostFunctionType;
-    }
-
-    public int getNetworkTimeUnitNum() {
-        return networkTimeUnitNum;
     }
 
     public int getTimeUnitNum() {
@@ -244,7 +272,7 @@ public class ConfigData {
         return linkDstList;
     }
 
-    public ArrayList<Integer> getLinkBandWidthList() {
-        return linkBandWidthList;
+    public ArrayList<Integer> getLinkCostList() {
+        return linkCostList;
     }
 }

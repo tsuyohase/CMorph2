@@ -26,10 +26,6 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
     JSlider slider;
     JSlider speedSlider;
     JComboBox<String> comboBox;
-    JButton nodeButton;
-    JButton linkButton;
-    boolean isNode = false;
-    boolean isLink = false;
     MainPanel mainPanel;
     LoadChartPanel loadChartPanel;
     TotalLoadChartPanel totalLoadPanel;
@@ -64,8 +60,8 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
         int screenWidth = 1980;
 
         mainPanel = new MainPanel(screenWidth / 3, configData);
-        loadChartPanel = new LoadChartPanel(screenWidth / 2, data, configData, isNode, isLink);
-        totalLoadPanel = new TotalLoadChartPanel(screenWidth / 2, data, configData, isNode, isLink);
+        loadChartPanel = new LoadChartPanel(screenWidth / 2, data, configData);
+        totalLoadPanel = new TotalLoadChartPanel(screenWidth / 2, data, configData);
 
         loadChartPanelDrawer = new ChartPanelDrawer(loadChartPanel, totalLoadPanel, 0, 100, data);
 
@@ -95,8 +91,6 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
         // add(configPanel, BorderLayout.NORTH);
 
         startButton.addActionListener(this);
-        nodeButton.addActionListener(this);
-        linkButton.addActionListener(this);
         pack();
         setVisible(true);
     }
@@ -145,13 +139,8 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
             configPanel.revalidate();
             configPanel.repaint();
 
-        } else if (e.getSource() == nodeButton) {
-            isNode = !isNode;
-            loadChartPanelDrawer.change(isNode, isLink);
-        } else if (e.getSource() == linkButton) {
-            isLink = !isLink;
-            loadChartPanelDrawer.change(isNode, isLink);
         }
+
     }
 
     @Override
@@ -206,22 +195,26 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
         configPanel.add(new JLabel("DATA_CENTER_NUM: " + configData.getDataCenterNum()));
         configPanel.add(new JLabel("USER_NUM: " + configData.getUserNum()));
         configPanel.add(new JLabel("RANDOM_JOB_TIME_SLOT: " + configData.getRandomJobTimeSlot()));
+        configPanel.add(new JLabel("RANDOM_JOB_CONTAINER_NUM: " + configData.getRandomJobContainerNum()));
         configPanel.add(new JLabel("RANDOMIZE_RATE: " + configData.getRandomizeRate()));
         configPanel.add(new JLabel("AVE_JOB_TIME_SLOT: " + configData.getAveJobTimeSlot()));
         configPanel.add(new JLabel("AVE_JOB_CONTAINER_NUM: " + configData.getAveJobContainerNum()));
-        // configPanel.add(new JLabel("FRONT_WEIGHT: " + configData.getFrontWeight()));
-        // configPanel.add(new JLabel("BACK_WEIGHT: " + configData.getBackWeight()));
-        // configPanel.add(new JLabel("DATA_OBJECT_TARGET_TYPE: " +
-        // configData.getDataObjectTargetType()));
-        configPanel.add(new JLabel("AVE_DATA_OBJECT_SIZE: " + configData.getAveDataObjectSize()));
+        configPanel.add(new JLabel("I_FRONT_WEIGHT: " + configData.getInteractiveFrontWeight()));
+        configPanel.add(new JLabel("I_BACK_WEIGHT: " + configData.getInteractiveBackWeight()));
+        configPanel.add(new JLabel("DI_FRONT_WEIGHT: " + configData.getDataIncentiveFrontWeight()));
+        configPanel.add(new JLabel("DI_BACK_WEIGHT: " + configData.getDataIncentiveBackWeight()));
+        configPanel.add(new JLabel("DATA_OBJECT_TARGET_TYPE: " +
+                configData.getDataObjectTargetType()));
         configPanel.add(new JLabel("AVE_MDC_CONTAINER_NUM: " + configData.getAveMDCContainerNum()));
         configPanel.add(new JLabel("AVE_DC_CONTAINER_NUM: " + configData.getAveDCContainerNum()));
         configPanel.add(new JLabel("NODE_COST_WEIGHT_TYPE: " + configData.getNodeCostWeightType()));
+        configPanel.add(new JLabel("COST_DC_DC: " + configData.getCostDCDC()));
+        configPanel.add(new JLabel("COST_DC_MDC: " + configData.getCostDCMDC()));
+        configPanel.add(new JLabel("COST_MDC_USER: " + configData.getCostMDCUser()));
+        configPanel.add(new JLabel("INTERACTIVE_JOB_PROBABILITY: " + configData.getInteractiveJobProbability()));
         // configPanel.add(new JLabel("RANDOM_NODE_LOCATION: " +
         // configData.getRandomNodeLocation()));
         configPanel.add(new JLabel("LOAD_COST_FUNCTION_TYPE: " + configData.getLoadCostFunctionType()));
-        configPanel.add(new JLabel("NETWORK_COST_FUNCTION_TYPE: " + configData.getNetworkCostFunctionType()));
-        configPanel.add(new JLabel("NETWORK_TIME_UNIT_NUM: " + configData.getNetworkTimeUnitNum()));
         configPanel.add(new JLabel("USER_SPAWN_SCENARIO: " + configData.getUserSpawnScenario()));
         configPanel.add(new JLabel("TIME_UNIT_NUM: " + configData.getTimeUnitNum()));
         configPanel.add(new JLabel("useCostDifRandomization: " + configData.getUseCostDifRandomization()));
@@ -247,9 +240,6 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
         speedLabel = new JLabel("speed: 1");
         speedSlider.addChangeListener(this);
 
-        nodeButton = new JButton("node");
-        linkButton = new JButton("link");
-
         this.comboBox = new JComboBox<>();
         comboBox.addActionListener(this);
         Collections.sort(outputFileNames);
@@ -262,8 +252,6 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
         buttonPanel.add(valueLabel);
         buttonPanel.add(speedSlider);
         buttonPanel.add(speedLabel);
-        buttonPanel.add(nodeButton);
-        buttonPanel.add(linkButton);
         buttonPanel.add(comboBox);
     }
 

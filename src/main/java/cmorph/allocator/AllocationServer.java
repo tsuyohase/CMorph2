@@ -1,8 +1,7 @@
 package cmorph.allocator;
 
-import static cmorph.settings.SimulationConfiguration.NETWORK_TIME_UNIT_NUM;
+import static cmorph.settings.SimulationConfiguration.COST_MDC_USER;
 import static cmorph.settings.SimulationConfiguration.USER_NUM;
-import static cmorph.settings.SimulationConfiguration.fixedNodeAllocation;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,10 +24,6 @@ public class AllocationServer {
         for (int i = 0; i < nodes.size(); i++) {
             nodes.get(i).removeEndJob(Timer.getCurrentTime());
         }
-        ArrayList<Link> links = Simulator.getSimulatedLinks();
-        for (int i = 0; i < links.size(); i++) {
-            links.get(i).removeEndJob(Timer.getCurrentTime() - NETWORK_TIME_UNIT_NUM);
-        }
     }
 
     /**
@@ -38,9 +33,6 @@ public class AllocationServer {
         if (Timer.getCurrentTime() > updateTime) {
             // ノードの状態を更新
             NodeAllocator.updateNodeLoads(Timer.getCurrentTime() - 1);
-
-            // ネットワークの状態を更新
-            NetworkAllocator.updateLinkLoads(Timer.getCurrentTime() - 1);
 
             // loggerにデータを追加
             Logger.addTimeStepData(updateTime, Timer.getCurrentTime());
@@ -62,40 +54,35 @@ public class AllocationServer {
         // 最良のコストを求める
         double bestCost = Double.MAX_VALUE;
         int bestNode = -1;
-        ArrayList<Integer> bestBackendPath = null;
-
         ArrayList<Node> simulatedNodes = Simulator.getSimulatedNodes();
 
         for (int i = 0; i < simulatedNodes.size(); i++) {
             // ノードの割り当てを更新するかどうか
-            int nodeId;
-            if (fixedNodeAllocation) {
-                nodeId = 0;
-                i = simulatedNodes.size();
-            } else {
-                nodeId = i;
-            }
+            int nodeId = i;
 
             double cost = Double.MAX_VALUE;
             if (NodeAllocator.getRemainingContainerNums().get(nodeId) >= job.getUseContainerNum()) {
-                double loadCost = NodeAllocator.getNodeCost(nodeId);
-                double frontendPathCost = 0;
-                ArrayList<Integer> backendPath = NetworkAllocator.getBackendPath(nodeId,
-                        job.getDataObjectNode().getNodeId());
-                double backendPathCost = NetworkAllocator.getBackendPathCost(backendPath);
-                cost = loadCost * job.getUseContainerNum() + frontendPathCost * job.getFrontWeight()
-                        + backendPathCost * job.getBackWeight();
+                cost = getCost(job, nodeId);
 
                 if (cost < bestCost) {
                     bestCost = cost;
                     bestNode = nodeId;
-                    bestBackendPath = backendPath;
                 }
 
             }
         }
 
         // ジョブを転送
-        Forwarder.forward(job, bestNode, bestBackendPath, bestCost);
+        Forwarder.forward(job, bestNode, bestCost);
+    }
+
+    public static double getCost(Job job, int nodeId) {
+        double loadCost = NodeAllocator.getNodeCost(nodeId);
+        double frontendPathCost = NetworkAllocator.getFrontendPathCost(
+                job.getUser(), nodeId);
+        double backendPathCost = NetworkAllocator.getBackendPathCost(nodeId,
+                job.getDataObjectNode().getNodeId());
+        return loadCost * job.getUseContainerNum() + frontendPathCost * job.getFrontWeight()
+                + backendPathCost * job.getBackWeight();
     }
 }

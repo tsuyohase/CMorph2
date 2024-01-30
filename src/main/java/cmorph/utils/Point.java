@@ -21,4 +21,10 @@ public class Point {
     public double getY() {
         return this.y;
     }
+
+    public double getDistance(Point point) {
+        double xDistance = this.x - point.getX();
+        double yDistance = this.y - point.getY();
+        return Math.sqrt(xDistance * xDistance + yDistance * yDistance);
+    }
 }

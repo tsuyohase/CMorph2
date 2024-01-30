@@ -13,6 +13,7 @@ import cmorph.logger.SimulationData;
 import cmorph.logger.ConfigData;
 import cmorph.logger.LinkState;
 import cmorph.logger.UserState;
+import cmorph.setUp.UserSetUp.UserType;
 import cmorph.logger.NodeState;
 import cmorph.logger.TimeStepData;
 import static cmorph.settings.SimulationConfiguration.END_TIME;
@@ -48,8 +49,8 @@ public class MainPanelDrawer extends Thread {
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
         nodeSizeBase = Math.max(
-                bufferedImage.getWidth() / ((configData.getDataCenterNum() + configData.getMicroDataCenterNum()) * 2),
-                10);
+                bufferedImage.getWidth() / ((configData.getDataCenterNum() + configData.getMicroDataCenterNum()) * 4),
+                15);
         userSize = Math.max(bufferedImage.getWidth() / configData.getUserNum(), 5);
 
     }
@@ -131,6 +132,8 @@ public class MainPanelDrawer extends Thread {
     }
 
     private void drawDotLine(int startX, int startY, int endX, int endY) {
+        threadGraphics.setColor(Color.GRAY);
+        threadGraphics.setStroke(new BasicStroke(1));
         int lineLength = 5;
         double distX = endX - startX;
         double distY = endY - startY;
@@ -160,8 +163,19 @@ public class MainPanelDrawer extends Thread {
         TimeStepData stepData = data.get(currentTime);
 
         // データを描画する処理
-        // List<UserState> userStates = stepData.getUserStates();
+        List<UserState> userStates = stepData.getUserStates();
         List<NodeState> nodeStates = stepData.getNodeStates();
+
+        for (int i = 0; i < configData.getLinkCostList().size(); i++) {
+            int linkWidth = (int) 10 / configData.getLinkCostList().get(i);
+            int nodeX1 = convertPoint(configData.getNodeXList().get(configData.getLinkSrcList().get(i)));
+            int nodeY1 = convertPoint(configData.getNodeYList().get(configData.getLinkSrcList().get(i)));
+            int nodeX2 = convertPoint(configData.getNodeXList().get(configData.getLinkDstList().get(i)));
+            int nodeY2 = convertPoint(configData.getNodeYList().get(configData.getLinkDstList().get(i)));
+            threadGraphics.setStroke(new BasicStroke(linkWidth));
+            threadGraphics.drawLine(nodeX1, nodeY1, nodeX2, nodeY2);
+            threadGraphics.setColor(Color.LIGHT_GRAY);
+        }
 
         for (int i = 0; i < nodeStates.size(); i++) {
             int nodeSize = nodeSizeBase;
@@ -174,37 +188,41 @@ public class MainPanelDrawer extends Thread {
             int nodeY = convertPoint(configData.getNodeYList().get(i)) - nodeSize / 2;
 
             threadGraphics.setColor(LoadColor(nodeState.getLoad()));
-            threadGraphics.fillOval(nodeX, nodeY, nodeSize, nodeSize);
+            threadGraphics.fillRect(nodeX, nodeY, nodeSize, nodeSize);
             threadGraphics.drawString(String.valueOf(i), nodeX, nodeY);
         }
+        ;
 
-        List<LinkState> linkStates = stepData.getLinkStates();
+        threadGraphics.setColor(Color.RED);
+        threadGraphics.fillOval(0, 10, userSize, userSize);
+        threadGraphics.drawString("Interactive", userSize + 10, userSize / 2 + 10);
 
-        for (int i = 0; i < linkStates.size(); i++) {
-            int linkWidth = (int) configData.getLinkBandWidthList().get(i) / 50;
-            LinkState linkState = linkStates.get(i);
-            int nodeX1 = convertPoint(configData.getNodeXList().get(configData.getLinkSrcList().get(i)));
-            int nodeY1 = convertPoint(configData.getNodeYList().get(configData.getLinkSrcList().get(i)));
-            int nodeX2 = convertPoint(configData.getNodeXList().get(configData.getLinkDstList().get(i)));
-            int nodeY2 = convertPoint(configData.getNodeYList().get(configData.getLinkDstList().get(i)));
-            threadGraphics.setColor(LoadColor(linkState.getLoad()));
-            threadGraphics.setStroke(new BasicStroke(linkWidth));
-            threadGraphics.drawLine(nodeX1, nodeY1, nodeX2, nodeY2);
-            threadGraphics.setColor(Color.LIGHT_GRAY);
-            threadGraphics.drawString(String.valueOf(i), (nodeX1 + nodeX2) / 2, (nodeY1 + nodeY2) / 2);
+        threadGraphics.setColor(Color.BLUE);
+        threadGraphics.fillOval(0, userSize + 20, userSize, userSize);
+        threadGraphics.drawString("Data-Incentive", userSize + 10, userSize + userSize / 2 + 20);
+
+        for (int i = 0; i < userStates.size(); i++) {
+            UserState userState = userStates.get(i);
+
+            int userX = convertPoint(userState.getX());
+            int userY = convertPoint(userState.getY());
+
+            if (userState.getX() >= 0 && userState.getY() >= 0) {
+                int connectedNodeId = userState.getConnectedNodeId();
+                drawDotLine(userX + userSize / 2, userY + userSize / 2,
+                        convertPoint(configData.getNodeXList().get(connectedNodeId)),
+                        convertPoint(configData.getNodeYList().get(connectedNodeId)));
+
+                if (userState.getUserType() == UserType.INTERACTIVE) {
+                    threadGraphics.setColor(Color.RED);
+                } else {
+                    threadGraphics.setColor(Color.BLUE);
+                }
+                threadGraphics.fillOval(userX, userY,
+                        userSize, userSize);
+            }
 
         }
-
-        // for (int i = 0; i < userStates.size(); i++) {
-        // UserState userState = userStates.get(i);
-
-        // int userX = convertPoint(userState.getX());
-        // int userY = convertPoint(userState.getY());
-
-        // threadGraphics.setColor(Color.BLACK);
-        // threadGraphics.fillOval(userX, userY,
-        // userSize, userSize);
-        // }
 
         mainPanel.repaint();
 

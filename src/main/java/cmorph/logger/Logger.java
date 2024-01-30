@@ -4,16 +4,10 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import cmorph.entities.Link;
 import cmorph.entities.Node;
 import cmorph.entities.User;
 import cmorph.settings.SimulationConfiguration;
 import cmorph.simulator.Simulator;
-import cmorph.simulator.Timer;
-
-import static cmorph.settings.SimulationConfiguration.END_TIME;
-import static cmorph.settings.SimulationConfiguration.NETWORK_TIME_UNIT_NUM;
-import static cmorph.settings.SimulationConfiguration.TIME_UNIT_NUM;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -63,16 +57,12 @@ public class Logger {
     private static TimeStepData getTimeStepData(long time) {
         List<UserState> userStates = new ArrayList<>();
         List<NodeState> nodeStates = new ArrayList<>();
-        List<LinkState> linkStates = new ArrayList<>();
         for (User user : Simulator.getSimulatedUsers()) {
             userStates.add(new UserState(user.getUserId(), user.getScenario().apply(time).getX(),
-                    user.getScenario().apply(time).getY()));
+                    user.getScenario().apply(time).getY(), user.getConnectStubId(time), user.getUserType()));
         }
         for (Node node : Simulator.getSimulatedNodes()) {
             nodeStates.add(new NodeState(node.getLoad(time)));
-        }
-        for (Link link : Simulator.getSimulatedLinks()) {
-            linkStates.add(new LinkState(link.getLoad(time)));
         }
 
         // for (Link link : Simulator.getSimulatedLinks()) {
@@ -87,7 +77,7 @@ public class Logger {
         // linkStates.add(new LinkState(loadAve));
         // }
 
-        return new TimeStepData(userStates, nodeStates, linkStates);
+        return new TimeStepData(userStates, nodeStates);
     }
 
 }

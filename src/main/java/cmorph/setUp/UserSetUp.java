@@ -1,13 +1,18 @@
 package cmorph.setUp;
 
+import static cmorph.settings.SimulationConfiguration.DATA_CENTER_NUM;
 import static cmorph.settings.SimulationConfiguration.END_TIME;
+import static cmorph.settings.SimulationConfiguration.INTERAXTIVE_JOB_PROBABILITY;
 import static cmorph.settings.SimulationConfiguration.MAP_HEIGHT;
 import static cmorph.settings.SimulationConfiguration.MAP_WIDTH;
+import static cmorph.settings.SimulationConfiguration.MICRO_DATA_CENTER_NUM;
 import static cmorph.settings.SimulationConfiguration.USER_LOCATION_SCENARIO;
 import static cmorph.settings.SimulationConfiguration.USER_NUM;
 import static cmorph.settings.SimulationConfiguration.USER_SPAWN_SCENARIO;
 import static cmorph.simulator.Main.random;
 
+import cmorph.entities.Node;
+import cmorph.simulator.Simulator;
 import cmorph.utils.Point;
 
 public class UserSetUp {
@@ -28,6 +33,7 @@ public class UserSetUp {
         RANDOM_LOCATION_SATY,
         STRAIGHT_DOWN,
         RANDOM,
+        TRANSIT_STUB,
     }
 
     /**
@@ -38,6 +44,11 @@ public class UserSetUp {
         MOUNTAIN,
         WAVE,
         RANDOM
+    }
+
+    public static enum UserType {
+        INTERACTIVE,
+        DATA_INCENTIVE
     }
 
     /**
@@ -86,6 +97,14 @@ public class UserSetUp {
         return despawnTime;
     }
 
+    public static UserType getUserType(int id) {
+        if (id % MICRO_DATA_CENTER_NUM <= (int) (MICRO_DATA_CENTER_NUM * INTERAXTIVE_JOB_PROBABILITY)) {
+            return UserType.INTERACTIVE;
+        } else {
+            return UserType.DATA_INCENTIVE;
+        }
+    }
+
     /**
      * ユーザのシナリオを返す
      * 
@@ -125,6 +144,19 @@ public class UserSetUp {
 
             // ランダムに移動するシナリオ
             return randomScenario(initPoint, spawnTime, despawnTime);
+        } else if (USER_LOCATION_SCENARIO == UserLocationScenario.TRANSIT_STUB) {
+            // Stubの周りに配置
+            Node stubNode = Simulator.getSimulatedStubs().get(id % MICRO_DATA_CENTER_NUM);
+            Point stubNodePoint = stubNode.getLocation();
+            double linkLengthBase = Simulator.getSimulatedNodes().get(0).getLocation().getDistance(
+                    Simulator.getSimulatedNodes().get(1).getLocation());
+            double linkLength = linkLengthBase * (2 + random.nextDouble()) / 10;
+            double theta = 2 * Math.PI * random.nextDouble();
+
+            double x = stubNodePoint.getX() + linkLength * Math.sin(theta);
+            double y = stubNodePoint.getY() + linkLength * Math.cos(theta);
+            initPoint = new Point(x, y);
+            return getStayScenario(initPoint, spawnTime, despawnTime);
         } else {
             throw new Error("UserLocationScenario is not defined.");
         }
