@@ -10,6 +10,7 @@ public class Simulator {
     private static final ArrayList<Node> simulatedNodes = new ArrayList<Node>();
     private static final ArrayList<User> simulatedUsers = new ArrayList<User>();
     private static final ArrayList<Link> simulatedLinks = new ArrayList<Link>();
+    private static final ArrayList<Node> simulatedStubs = new ArrayList<Node>();
     private static long currentTime = 0;
 
     public static void addNode(Node node) {
@@ -34,5 +35,13 @@ public class Simulator {
 
     public static ArrayList<User> getSimulatedUsers() {
         return simulatedUsers;
+    }
+
+    public static void addStub(Node stub) {
+        simulatedStubs.add(stub);
+    }
+
+    public static ArrayList<Node> getSimulatedStubs() {
+        return simulatedStubs;
     }
 }

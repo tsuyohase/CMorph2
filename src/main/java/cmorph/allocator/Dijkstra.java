@@ -17,20 +17,20 @@ import cmorph.simulator.Simulator;
 
 public class Dijkstra {
 
-    public static ArrayList<Integer> calculate(int startNodeId, int endNodeId, ArrayList<Double> linkWeights) {
+    public static ArrayList<Integer> calculate(int startNodeId, int endNodeId) {
 
         ArrayList<Node> graph = new ArrayList<>();
 
         ArrayList<Link> links = Simulator.getSimulatedLinks();
 
         int n = DATA_CENTER_NUM + MICRO_DATA_CENTER_NUM; // ノードの数
-        int m = linkWeights.size(); // エッジの数
+        int m = links.size(); // エッジの数
         for (int i = 0; i < n; i++)
             graph.add(new Node(i, Integer.MAX_VALUE)); // 各ノードを生成する
         for (int i = 0; i < m; i++) { // エッジの定義を読み込む
             int s = links.get(i).getConnectNode1().getNodeId(); // 始点
             int t = links.get(i).getConnectNode2().getNodeId(); // 終点
-            double w = linkWeights.get(i); // 重み
+            double w = links.get(i).getCost(); // 重み
             graph.get(s).addEdge(t, w); // ノードsからtにエッジを張る
             graph.get(t).addEdge(s, w); // ノードtからsにエッジを張る
         }

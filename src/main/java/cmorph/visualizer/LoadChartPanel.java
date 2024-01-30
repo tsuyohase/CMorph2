@@ -35,10 +35,8 @@ public class LoadChartPanel extends JPanel {
     List<String> linkLegend;
     int currentTime;
     boolean changeData;
-    boolean isNode;
-    boolean isLink;
 
-    public LoadChartPanel(int size, List<TimeStepData> data, ConfigData configData, boolean isNode, boolean isLink) {
+    public LoadChartPanel(int size, List<TimeStepData> data, ConfigData configData) {
         this.margin = size / 10;
 
         setPreferredSize(new Dimension((int) size, size / 2));
@@ -51,8 +49,6 @@ public class LoadChartPanel extends JPanel {
         bufferedGraphics.fillRect(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
 
         this.configData = configData;
-        this.isNode = isNode;
-        this.isLink = isLink;
         setData(data, configData);
     }
 
@@ -73,8 +69,6 @@ public class LoadChartPanel extends JPanel {
     }
 
     public void change(boolean isNode, boolean isLink) {
-        this.isNode = isNode;
-        this.isLink = isLink;
         setData(data, configData);
     }
 
@@ -99,13 +93,6 @@ public class LoadChartPanel extends JPanel {
             } else {
                 nodeLegend.add("MDC " + i);
             }
-        }
-        rand = new Random(28);
-
-        for (int i = 0; i < configData.getLinkBandWidthList().size(); i++) {
-            linkLoads.add(data.get(0).getLinkStates().get(i).getLoad());
-            linkColors.add(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
-            linkLegend.add("Link " + i);
         }
     }
 
@@ -152,35 +139,18 @@ public class LoadChartPanel extends JPanel {
         g.fillRect(margin + 1, convertLoad(0.75, graphHeight), graphWidth, (getHeight() - margin * 2) / 2);
 
         for (int t = 1; t < data.size(); t++) {
-            if (isNode) {
-                for (int i = 0; i < data.get(t).getNodeStates().size(); i++) {
-                    double load = data.get(t).getNodeStates().get(i).getLoad();
-                    int x1 = convertTime(t - 1, graphWidth);
-                    int y1 = convertLoad(nodeLoads.get(i), graphHeight);
-                    int x2 = convertTime(t, graphWidth);
-                    int y2 = convertLoad(load, graphHeight);
+            for (int i = 0; i < data.get(t).getNodeStates().size(); i++) {
+                double load = data.get(t).getNodeStates().get(i).getLoad();
+                int x1 = convertTime(t - 1, graphWidth);
+                int y1 = convertLoad(nodeLoads.get(i), graphHeight);
+                int x2 = convertTime(t, graphWidth);
+                int y2 = convertLoad(load, graphHeight);
 
-                    g.setColor(nodeColors.get(i)); // サーバーごとに色を設定
-                    g.drawLine(x1, y1, x2, y2);
-                    g.drawLine(x1 + 1, y1, x2 + 1, y2);
+                g.setColor(nodeColors.get(i)); // サーバーごとに色を設定
+                g.drawLine(x1, y1, x2, y2);
+                g.drawLine(x1 + 1, y1, x2 + 1, y2);
 
-                    nodeLoads.set(i, load);
-                }
-            }
-            if (isLink) {
-                for (int i = 0; i < data.get(t).getLinkStates().size(); i++) {
-                    double load = data.get(t).getLinkStates().get(i).getLoad();
-                    int x1 = convertTime(t - 1, graphWidth);
-                    int y1 = convertLoad(linkLoads.get(i), graphHeight);
-                    int x2 = convertTime(t, graphWidth);
-                    int y2 = convertLoad(load, graphHeight);
-
-                    g.setColor(linkColors.get(i)); // サーバーごとに色を設定
-                    g.drawLine(x1, y1, x2, y2);
-                    g.drawLine(x1 + 1, y1, x2 + 1, y2);
-
-                    linkLoads.set(i, load);
-                }
+                nodeLoads.set(i, load);
             }
 
         }
@@ -194,23 +164,12 @@ public class LoadChartPanel extends JPanel {
         g.setColor(Color.BLACK);
         int legendX = getWidth() - margin;
         int legendY = margin + 15;
-        if (isNode) {
-            for (int i = 0; i < nodeLegend.size(); i++) {
-                g.setColor(nodeColors.get(i));
-                g.fillRect(legendX, legendY, 10, 10);
-                g.setColor(Color.BLACK);
-                g.drawString(nodeLegend.get(i), legendX + 15, legendY + 10);
-                legendY += 20;
-            }
-        }
-        if (isLink) {
-            for (int i = 0; i < linkLegend.size(); i++) {
-                g.setColor(linkColors.get(i));
-                g.fillRect(legendX, legendY, 10, 10);
-                g.setColor(Color.BLACK);
-                g.drawString(linkLegend.get(i), legendX + 15, legendY + 10);
-                legendY += 20;
-            }
+        for (int i = 0; i < nodeLegend.size(); i++) {
+            g.setColor(nodeColors.get(i));
+            g.fillRect(legendX, legendY, 10, 10);
+            g.setColor(Color.BLACK);
+            g.drawString(nodeLegend.get(i), legendX + 15, legendY + 10);
+            legendY += 20;
         }
     }
 }

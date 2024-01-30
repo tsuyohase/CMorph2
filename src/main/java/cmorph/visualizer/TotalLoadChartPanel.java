@@ -23,8 +23,6 @@ import cmorph.logger.TimeStepData;
 public class TotalLoadChartPanel extends JPanel {
     List<TimeStepData> data;
     ConfigData configData;
-    boolean isNode;
-    boolean isLink;
     BufferedImage bufferedImage;
     Graphics2D bufferedGraphics;
     int margin;
@@ -37,8 +35,7 @@ public class TotalLoadChartPanel extends JPanel {
     int totalBandWidth;
     boolean changeData;
 
-    public TotalLoadChartPanel(int size, List<TimeStepData> data, ConfigData configData, boolean isNode,
-            boolean isLink) {
+    public TotalLoadChartPanel(int size, List<TimeStepData> data, ConfigData configData) {
         this.margin = size / 10;
 
         setPreferredSize(new Dimension((int) size, 2 * size / 5));
@@ -51,8 +48,6 @@ public class TotalLoadChartPanel extends JPanel {
         bufferedGraphics.fillRect(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
 
         this.configData = configData;
-        this.isNode = isNode;
-        this.isLink = isLink;
         setData(data, configData);
     }
 
@@ -73,8 +68,6 @@ public class TotalLoadChartPanel extends JPanel {
     }
 
     public void change(boolean isNode, boolean isLink) {
-        this.isNode = isNode;
-        this.isLink = isLink;
         setData(data, configData);
     }
 
@@ -100,13 +93,6 @@ public class TotalLoadChartPanel extends JPanel {
             }
             totalContainerNum += configData.getNodeContainerNumList().get(i);
 
-        }
-        rand = new Random(28);
-
-        for (int i = 0; i < configData.getLinkBandWidthList().size(); i++) {
-            linkColors.add(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)));
-            linkLegend.add("Link " + i);
-            totalBandWidth += configData.getLinkBandWidthList().get(i);
         }
 
     }
@@ -152,32 +138,16 @@ public class TotalLoadChartPanel extends JPanel {
 
         for (int t = 0; t < data.size(); t++) {
             double currentContainerNum = 0;
-            if (isNode) {
-                for (int i = 0; i < data.get(t).getNodeStates().size(); i++) {
-                    double load = data.get(t).getNodeStates().get(i).getLoad();
-                    int containerNum = configData.getNodeContainerNumList().get(i);
-                    double useContainerNum = containerNum * load;
-                    int x = convertTime(t, graphWidth);
-                    int y = convertLoad((currentContainerNum + useContainerNum) / totalContainerNum, graphHeight);
+            for (int i = 0; i < data.get(t).getNodeStates().size(); i++) {
+                double load = data.get(t).getNodeStates().get(i).getLoad();
+                int containerNum = configData.getNodeContainerNumList().get(i);
+                double useContainerNum = containerNum * load;
+                int x = convertTime(t, graphWidth);
+                int y = convertLoad((currentContainerNum + useContainerNum) / totalContainerNum, graphHeight);
 
-                    g.setColor(nodeColors.get(i)); // サーバーごとに色を設定
-                    g.drawLine(x, convertLoad(currentContainerNum / totalContainerNum, graphHeight), x, y);
-                    currentContainerNum += useContainerNum;
-                }
-            }
-            double currentBandWidth = 0;
-            if (isLink) {
-                for (int i = 0; i < data.get(t).getLinkStates().size(); i++) {
-                    double load = data.get(t).getLinkStates().get(i).getLoad();
-                    int bandwidth = configData.getLinkBandWidthList().get(i);
-                    double useBandwidth = bandwidth * load;
-                    int x = convertTime(t, graphWidth);
-                    int y = convertLoad((currentBandWidth + useBandwidth) / totalBandWidth, graphHeight);
-
-                    g.setColor(linkColors.get(i)); // サーバーごとに色を設定
-                    g.drawLine(x, convertLoad(currentBandWidth / totalBandWidth, graphHeight), x, y);
-                    currentBandWidth += useBandwidth;
-                }
+                g.setColor(nodeColors.get(i)); // サーバーごとに色を設定
+                g.drawLine(x, convertLoad(currentContainerNum / totalContainerNum, graphHeight), x, y);
+                currentContainerNum += useContainerNum;
             }
 
         }
@@ -186,23 +156,12 @@ public class TotalLoadChartPanel extends JPanel {
         g.setColor(Color.BLACK);
         int legendX = getWidth() - margin;
         int legendY = margin + 15;
-        if (isNode) {
-            for (int i = 0; i < nodeLegend.size(); i++) {
-                g.setColor(nodeColors.get(i));
-                g.fillRect(legendX, legendY, 10, 10);
-                g.setColor(Color.BLACK);
-                g.drawString(nodeLegend.get(i), legendX + 15, legendY + 10);
-                legendY += 20;
-            }
-        }
-        if (isLink) {
-            for (int i = 0; i < linkLegend.size(); i++) {
-                g.setColor(linkColors.get(i));
-                g.fillRect(legendX, legendY, 10, 10);
-                g.setColor(Color.BLACK);
-                g.drawString(linkLegend.get(i), legendX + 15, legendY + 10);
-                legendY += 20;
-            }
+        for (int i = 0; i < nodeLegend.size(); i++) {
+            g.setColor(nodeColors.get(i));
+            g.fillRect(legendX, legendY, 10, 10);
+            g.setColor(Color.BLACK);
+            g.drawString(nodeLegend.get(i), legendX + 15, legendY + 10);
+            legendY += 20;
         }
         // time line
         int currentTimeX = convertTime(currentTime, graphWidth);

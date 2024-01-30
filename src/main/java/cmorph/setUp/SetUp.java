@@ -1,6 +1,9 @@
 package cmorph.setUp;
 
-import static cmorph.settings.SimulationConfiguration.BAND_WIDTH;
+import static cmorph.settings.SimulationConfiguration.AVE_DC_CONTAINER_NUM;
+import static cmorph.settings.SimulationConfiguration.AVE_MDC_CONTAINER_NUM;
+import static cmorph.settings.SimulationConfiguration.COST_DC_DC;
+import static cmorph.settings.SimulationConfiguration.COST_DC_MDC;
 import static cmorph.settings.SimulationConfiguration.DATA_CENTER_NUM;
 import static cmorph.settings.SimulationConfiguration.MICRO_DATA_CENTER_NUM;
 import static cmorph.settings.SimulationConfiguration.USER_NUM;
@@ -11,6 +14,7 @@ import cmorph.entities.User;
 import cmorph.event.JobEvent;
 import cmorph.job.Job;
 import cmorph.setUp.UserSetUp.Scenario;
+import cmorph.setUp.UserSetUp.UserType;
 import cmorph.simulator.Simulator;
 import cmorph.simulator.Timer;
 import cmorph.utils.Point;
@@ -21,40 +25,58 @@ public class SetUp {
      * NodeとUserを生成する
      */
     public static void setUp() {
-        setUpNodes();
-        setUpLinks();
+        setUpDC();
+        setUpMDC();
         setUpUsers();
     }
 
     /**
-     * Nodeを生成し, Simulatorのリストに追加する
+     * DCを生成し, 相互に接続し、Simulatorのリストに追加する
      * 
      * @param
      * @return
      */
-    private static void setUpNodes() {
-        for (int id = 0; id < MICRO_DATA_CENTER_NUM + DATA_CENTER_NUM; id++) {
-            Point nodeLocation = NodeSetUp.getNodeLocation(id);
-            int containerNum = NodeSetUp.getNodeContainerNum(id);
+    private static void setUpDC() {
+
+        for (int id = 0; id < DATA_CENTER_NUM; id++) {
+            Point nodeLocation = NodeSetUp.getDCLocation(id);
+            int containerNum = AVE_DC_CONTAINER_NUM;
             int costWeight = NodeSetUp.getNodeCostWeight(id);
             Node node = new Node(id, nodeLocation, containerNum, costWeight);
             Simulator.addNode(node);
         }
-    }
-
-    private static void setUpLinks() {
-        int id = 0;
+        int linkId = 0;
         ArrayList<Node> nodes = Simulator.getSimulatedNodes();
-        for (int i = 0; i < MICRO_DATA_CENTER_NUM + DATA_CENTER_NUM; i++) {
-            for (int j = 0; j < MICRO_DATA_CENTER_NUM + DATA_CENTER_NUM; j++) {
-                int bandwidth = BAND_WIDTH[i][j];
-                if (bandwidth == 0) {
+        // DC(transit)ノードは相互に接続する
+        for (int i = 0; i < DATA_CENTER_NUM; i++) {
+            for (int j = 0; j < DATA_CENTER_NUM; j++) {
+                if (i == j) {
                     continue;
                 }
-                Link link = new Link(id, nodes.get(i), nodes.get(j), bandwidth);
+                Link link = new Link(linkId, nodes.get(i), nodes.get(j), COST_DC_DC);
                 Simulator.addLink(link);
-                id++;
+                linkId++;
             }
+        }
+    }
+
+    private static void setUpMDC() {
+        int nextNodeId = Simulator.getSimulatedNodes().size();
+        int nextLinkId = Simulator.getSimulatedLinks().size();
+        for (int id = nextNodeId; id < DATA_CENTER_NUM + MICRO_DATA_CENTER_NUM; id++) {
+            Node transitNode = NodeSetUp.getTransitNode(id);
+            // Nodeを追加
+            Point nodeLocation = NodeSetUp.getMDCLocation(transitNode);
+            int containerNum = AVE_MDC_CONTAINER_NUM;
+            int costWeight = NodeSetUp.getNodeCostWeight(id);
+            Node node = new Node(id, nodeLocation, containerNum, costWeight);
+            Simulator.addNode(node);
+            Simulator.addStub(node);
+
+            // Linkを追加
+            Link link = new Link(nextLinkId, transitNode, node, COST_DC_MDC);
+            Simulator.addLink(link);
+            nextLinkId++;
         }
     }
 
@@ -73,7 +95,10 @@ public class SetUp {
             // シナリオを取得
             Scenario scenario = UserSetUp.getScenario(id, spawnTime, despawnTime);
 
-            User user = new User(id, scenario);
+            // usertypeを取得
+            UserType userType = UserSetUp.getUserType(id);
+
+            User user = new User(id, scenario, userType);
             Simulator.addUser(user);
 
             // ユーザごとに最初のJobを生成
