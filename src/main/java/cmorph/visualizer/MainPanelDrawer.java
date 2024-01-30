@@ -50,7 +50,7 @@ public class MainPanelDrawer extends Thread {
 
         nodeSizeBase = Math.max(
                 bufferedImage.getWidth() / ((configData.getDataCenterNum() + configData.getMicroDataCenterNum()) * 4),
-                10);
+                15);
         userSize = Math.max(bufferedImage.getWidth() / configData.getUserNum(), 5);
 
     }
@@ -166,6 +166,17 @@ public class MainPanelDrawer extends Thread {
         List<UserState> userStates = stepData.getUserStates();
         List<NodeState> nodeStates = stepData.getNodeStates();
 
+        for (int i = 0; i < configData.getLinkCostList().size(); i++) {
+            int linkWidth = (int) 10 / configData.getLinkCostList().get(i);
+            int nodeX1 = convertPoint(configData.getNodeXList().get(configData.getLinkSrcList().get(i)));
+            int nodeY1 = convertPoint(configData.getNodeYList().get(configData.getLinkSrcList().get(i)));
+            int nodeX2 = convertPoint(configData.getNodeXList().get(configData.getLinkDstList().get(i)));
+            int nodeY2 = convertPoint(configData.getNodeYList().get(configData.getLinkDstList().get(i)));
+            threadGraphics.setStroke(new BasicStroke(linkWidth));
+            threadGraphics.drawLine(nodeX1, nodeY1, nodeX2, nodeY2);
+            threadGraphics.setColor(Color.LIGHT_GRAY);
+        }
+
         for (int i = 0; i < nodeStates.size(); i++) {
             int nodeSize = nodeSizeBase;
             if (configData.getNodeContainerNumList().get(i) > configData.getAveMDCContainerNum()) {
@@ -182,25 +193,13 @@ public class MainPanelDrawer extends Thread {
         }
         ;
 
-        for (int i = 0; i < configData.getLinkCostList().size(); i++) {
-            int linkWidth = (int) 10 / configData.getLinkCostList().get(i);
-            int nodeX1 = convertPoint(configData.getNodeXList().get(configData.getLinkSrcList().get(i)));
-            int nodeY1 = convertPoint(configData.getNodeYList().get(configData.getLinkSrcList().get(i)));
-            int nodeX2 = convertPoint(configData.getNodeXList().get(configData.getLinkDstList().get(i)));
-            int nodeY2 = convertPoint(configData.getNodeYList().get(configData.getLinkDstList().get(i)));
-            threadGraphics.setStroke(new BasicStroke(linkWidth));
-            threadGraphics.drawLine(nodeX1, nodeY1, nodeX2, nodeY2);
-            threadGraphics.setColor(Color.LIGHT_GRAY);
-            threadGraphics.drawString(String.valueOf(i), (nodeX1 + nodeX2) / 2, (nodeY1 + nodeY2) / 2);
-        }
-
         threadGraphics.setColor(Color.RED);
-        threadGraphics.fillOval(0, 0, userSize, userSize);
-        threadGraphics.drawString("Interactive", userSize + 10, userSize / 2);
+        threadGraphics.fillOval(0, 10, userSize, userSize);
+        threadGraphics.drawString("Interactive", userSize + 10, userSize / 2 + 10);
 
         threadGraphics.setColor(Color.BLUE);
-        threadGraphics.fillOval(0, userSize + 10, userSize, userSize);
-        threadGraphics.drawString("Data-Incentive", userSize + 10, userSize + userSize / 2 + 10);
+        threadGraphics.fillOval(0, userSize + 20, userSize, userSize);
+        threadGraphics.drawString("Data-Incentive", userSize + 10, userSize + userSize / 2 + 20);
 
         for (int i = 0; i < userStates.size(); i++) {
             UserState userState = userStates.get(i);

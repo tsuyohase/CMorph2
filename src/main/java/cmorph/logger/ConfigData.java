@@ -31,6 +31,7 @@ public class ConfigData {
     private int dataIncentiveBackWeight;
     private DataObjectTargetType dataObjectTargetType;
     private int aveDataObjectSize;
+    private double interactiveJobProbability;
 
     private int microDataCenterNum;
     private int dataCenterNum;
@@ -79,6 +80,7 @@ public class ConfigData {
         this.dataIncentiveFrontWeight = SimulationConfiguration.DATA_INCENTIVE_BACK_WEIGHT;
         this.dataIncentiveBackWeight = SimulationConfiguration.DATA_INCENTIVE_FRONT_WEIGHT;
         this.aveDataObjectSize = SimulationConfiguration.AVE_DATA_OBJECT_SIZE;
+        this.interactiveJobProbability = SimulationConfiguration.INTERAXTIVE_JOB_PROBABILITY;
 
         this.microDataCenterNum = SimulationConfiguration.MICRO_DATA_CENTER_NUM;
         this.dataCenterNum = SimulationConfiguration.DATA_CENTER_NUM;
@@ -180,6 +182,10 @@ public class ConfigData {
 
     public int getAveDataObjectSize() {
         return aveDataObjectSize;
+    }
+
+    public double getInteractiveJobProbability() {
+        return interactiveJobProbability;
     }
 
     public int getMicroDataCenterNum() {

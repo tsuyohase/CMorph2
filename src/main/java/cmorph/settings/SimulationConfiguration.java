@@ -15,7 +15,7 @@ public class SimulationConfiguration {
     public static final int MAP_HEIGHT = 300;
 
     // User
-    public static final int USER_NUM = 20;
+    public static final int USER_NUM = 100;
     public static final UserLocationScenario USER_LOCATION_SCENARIO = UserLocationScenario.TRANSIT_STUB;
     public static final UserSpawnScenario USER_SPAWN_SCENARIO = UserSpawnScenario.MOUNTAIN;
 
@@ -31,12 +31,13 @@ public class SimulationConfiguration {
     public static final int DATA_INCENTIVE_BACK_WEIGHT = 10;
     public static final DataObjectTargetType DATA_OBJECT_TARGET_TYPE = DataObjectTargetType.DC;
     public static final int AVE_DATA_OBJECT_SIZE = 15000 / USER_NUM; // Kbit
+    public static final double INTERAXTIVE_JOB_PROBABILITY = 0.3;
 
     // Node
     public static final int MICRO_DATA_CENTER_NUM = 2;
     public static final int DATA_CENTER_NUM = 2;
-    public static final int AVE_MDC_CONTAINER_NUM = 50 * USER_NUM;
-    public static final int AVE_DC_CONTAINER_NUM = 100 * USER_NUM;
+    public static final int AVE_MDC_CONTAINER_NUM = 100 * USER_NUM / MICRO_DATA_CENTER_NUM;
+    public static final int AVE_DC_CONTAINER_NUM = 300 * USER_NUM / DATA_CENTER_NUM;
     public static final boolean RANDOM_DC_LOCATION = false;
     public static final NodeCostWeightType NODE_COST_WEIGHT_TYPE = NodeCostWeightType.EQUALITY;
 

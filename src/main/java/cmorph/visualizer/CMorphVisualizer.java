@@ -211,6 +211,7 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
         configPanel.add(new JLabel("COST_DC_DC: " + configData.getCostDCDC()));
         configPanel.add(new JLabel("COST_DC_MDC: " + configData.getCostDCMDC()));
         configPanel.add(new JLabel("COST_MDC_USER: " + configData.getCostMDCUser()));
+        configPanel.add(new JLabel("INTERACTIVE_JOB_PROBABILITY: " + configData.getInteractiveJobProbability()));
         // configPanel.add(new JLabel("RANDOM_NODE_LOCATION: " +
         // configData.getRandomNodeLocation()));
         configPanel.add(new JLabel("LOAD_COST_FUNCTION_TYPE: " + configData.getLoadCostFunctionType()));

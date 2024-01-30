@@ -2,6 +2,7 @@ package cmorph.setUp;
 
 import static cmorph.settings.SimulationConfiguration.DATA_CENTER_NUM;
 import static cmorph.settings.SimulationConfiguration.END_TIME;
+import static cmorph.settings.SimulationConfiguration.INTERAXTIVE_JOB_PROBABILITY;
 import static cmorph.settings.SimulationConfiguration.MAP_HEIGHT;
 import static cmorph.settings.SimulationConfiguration.MAP_WIDTH;
 import static cmorph.settings.SimulationConfiguration.MICRO_DATA_CENTER_NUM;
@@ -97,7 +98,7 @@ public class UserSetUp {
     }
 
     public static UserType getUserType(int id) {
-        if (id % MICRO_DATA_CENTER_NUM == 0) {
+        if (id % MICRO_DATA_CENTER_NUM <= (int) (MICRO_DATA_CENTER_NUM * INTERAXTIVE_JOB_PROBABILITY)) {
             return UserType.INTERACTIVE;
         } else {
             return UserType.DATA_INCENTIVE;
@@ -150,10 +151,10 @@ public class UserSetUp {
             double linkLengthBase = Simulator.getSimulatedNodes().get(0).getLocation().getDistance(
                     Simulator.getSimulatedNodes().get(1).getLocation());
             double linkLength = linkLengthBase * (2 + random.nextDouble()) / 10;
-            double theta = Math.signum(random.nextDouble() - 0.5) * Math.PI / 2 * (1 + 2 * random.nextDouble()) / 4;
+            double theta = 2 * Math.PI * random.nextDouble();
 
-            double x = stubNodePoint.getX() + Math.signum(random.nextDouble() - 0.5) * linkLength * Math.sin(theta);
-            double y = stubNodePoint.getY() + Math.signum(random.nextDouble() - 0.5) * linkLength * Math.cos(theta);
+            double x = stubNodePoint.getX() + linkLength * Math.sin(theta);
+            double y = stubNodePoint.getY() + linkLength * Math.cos(theta);
             initPoint = new Point(x, y);
             return getStayScenario(initPoint, spawnTime, despawnTime);
         } else {
