@@ -35,7 +35,7 @@ public class PseudoCostFunctions {
         return Math.pow(2 * load - 1, 2) / (1 - load) + 1;
     }
 
-    private static double monotonicCostFunction(double load) {
+    public static double monotonicCostFunction(double load) {
         return Math.pow(load, 4.5) / (1 - load) + 1;
     }
 

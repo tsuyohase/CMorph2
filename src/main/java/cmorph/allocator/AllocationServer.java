@@ -57,16 +57,14 @@ public class AllocationServer {
         ArrayList<Node> simulatedNodes = Simulator.getSimulatedNodes();
 
         for (int i = 0; i < simulatedNodes.size(); i++) {
-            // ノードの割り当てを更新するかどうか
-            int nodeId = i;
 
             double cost = Double.MAX_VALUE;
-            if (NodeAllocator.getRemainingContainerNums().get(nodeId) >= job.getUseContainerNum()) {
-                cost = getCost(job, nodeId);
+            if (NodeAllocator.getRemainingContainerNums().get(i) >= job.getUseContainerNum()) {
+                cost = getCost(job, i);
 
                 if (cost < bestCost) {
                     bestCost = cost;
-                    bestNode = nodeId;
+                    bestNode = i;
                 }
 
             }

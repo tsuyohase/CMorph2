@@ -208,10 +208,10 @@ public class MainPanelDrawer extends Thread {
             int userY = convertPoint(userState.getY());
 
             if (userState.getX() >= 0 && userState.getY() >= 0) {
-                int connectedNodeId = userState.getConnectedNodeId();
-                drawDotLine(userX + userSize / 2, userY + userSize / 2,
-                        convertPoint(configData.getNodeXList().get(connectedNodeId)),
-                        convertPoint(configData.getNodeYList().get(connectedNodeId)));
+                // int connectedNodeId = userState.getConnectedNodeId();
+                // drawDotLine(userX + userSize / 2, userY + userSize / 2,
+                // convertPoint(configData.getNodeXList().get(connectedNodeId)),
+                // convertPoint(configData.getNodeYList().get(connectedNodeId)));
 
                 if (userState.getUserType() == UserType.INTERACTIVE) {
                     threadGraphics.setColor(Color.RED);

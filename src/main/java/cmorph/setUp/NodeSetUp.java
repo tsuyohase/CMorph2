@@ -28,11 +28,11 @@ public class NodeSetUp {
      * @param id
      * @return Point
      */
-    public static Point getDCLocation(int id) {
+    public static Point getDCLocation(int id, int nodeNum) {
         if (RANDOM_DC_LOCATION) {
             return getDCLocationByRandom();
         } else {
-            return getDCLocationByOrder(id);
+            return getDCLocationByOrder(id, nodeNum);
         }
     }
 
@@ -53,9 +53,7 @@ public class NodeSetUp {
      * @param id
      * @return Point
      */
-    private static Point getDCLocationByOrder(int id) {
-        int nodeNum = DATA_CENTER_NUM;
-
+    private static Point getDCLocationByOrder(int id, int nodeNum) {
         // 行, 列のnodeの数
         int nodesPerRow = (int) Math.ceil(Math.sqrt((double) nodeNum));
         int nodesPerColumn = (int) Math.ceil((double) nodeNum / nodesPerRow);
@@ -75,8 +73,12 @@ public class NodeSetUp {
      * @param id
      * @return Point
      */
-    public static Node getTransitNode(int id) {
-        return Simulator.getSimulatedNodes().get(id % DATA_CENTER_NUM);
+    public static Node getTransitNode(int id, int transitNodeNum) {
+        if (transitNodeNum == 0) {
+            return null;
+        } else {
+            return Simulator.getSimulatedNodes().get(id % transitNodeNum);
+        }
     }
 
     /**
@@ -84,15 +86,19 @@ public class NodeSetUp {
      * 
      * @return Point
      */
-    public static Point getMDCLocation(Node node) {
-        double linkLengthBase = Simulator.getSimulatedNodes().get(0).getLocation().getDistance(
-                Simulator.getSimulatedNodes().get(1).getLocation());
-        double linkLength = linkLengthBase * (2 + random.nextDouble()) / 3;
-        double theta = Math.signum(random.nextDouble() - 0.5) * Math.PI / 2 * (1 + 2 * random.nextDouble()) / 4;
-        Point dcLocation = node.getLocation();
-        double x = dcLocation.getX() + Math.signum(random.nextDouble() - 0.5) * linkLength * Math.sin(theta);
-        double y = dcLocation.getY() + Math.signum(random.nextDouble() - 0.5) * linkLength * Math.cos(theta);
-        return new Point(x, y);
+    public static Point getMDCLocation(int id, Node transitNode) {
+        if (transitNode == null) {
+            return getDCLocation(id, MICRO_DATA_CENTER_NUM);
+        } else {
+            double linkLengthBase = Simulator.getSimulatedNodes().get(0).getLocation().getDistance(
+                    Simulator.getSimulatedNodes().get(1).getLocation());
+            double linkLength = linkLengthBase * (2 + random.nextDouble()) / 5;
+            double theta = 2 * Math.PI * random.nextDouble();
+            Point dcLocation = transitNode.getLocation();
+            double x = dcLocation.getX() + linkLength * Math.sin(theta);
+            double y = dcLocation.getY() + linkLength * Math.cos(theta);
+            return new Point(x, y);
+        }
     }
 
     public static int getNodeCostWeight(int id) {

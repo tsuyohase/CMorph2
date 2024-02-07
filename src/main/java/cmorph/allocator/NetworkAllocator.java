@@ -1,6 +1,9 @@
 package cmorph.allocator;
 
 import static cmorph.settings.SimulationConfiguration.COST_MDC_USER;
+import static cmorph.settings.SimulationConfiguration.MAP_HEIGHT;
+import static cmorph.settings.SimulationConfiguration.MAP_WIDTH;
+import static cmorph.settings.SimulationConfiguration.NETWORK_TYPE;
 import static cmorph.settings.SimulationConfiguration.TIME_UNIT_NUM;
 import static cmorph.settings.SimulationConfiguration.USER_NUM;
 
@@ -11,6 +14,7 @@ import cmorph.entities.Link;
 import cmorph.entities.User;
 import cmorph.simulator.Simulator;
 import cmorph.simulator.Timer;
+import cmorph.utils.Point;
 
 public class NetworkAllocator {
     // /**
@@ -41,14 +45,35 @@ public class NetworkAllocator {
     // }
     // }
 
+    public static enum networkType {
+        PATH,
+        WIRELESS
+    }
+
     public static double getBackendPathCost(int srcNodeId, int dstNodeId) {
-        ArrayList<Integer> path = Dijkstra.calculate(srcNodeId, dstNodeId);
-        return getCostByPath(path);
+        if (NETWORK_TYPE == networkType.PATH) {
+            ArrayList<Integer> path = Dijkstra.calculate(srcNodeId, dstNodeId);
+            return getCostByPath(path);
+        } else if (NETWORK_TYPE == networkType.WIRELESS) {
+            Point srcPoint = Simulator.getSimulatedNodes().get(srcNodeId).getLocation();
+            Point dstPoint = Simulator.getSimulatedNodes().get(dstNodeId).getLocation();
+            return getCostByDistance(srcPoint, dstPoint);
+        } else {
+            throw new Error("Network type is not defined");
+        }
     }
 
     public static double getFrontendPathCost(User user, int dstNodeId) {
-        ArrayList<Integer> path = Dijkstra.calculate(user.getConnectStubId(Timer.getCurrentTime()), dstNodeId);
-        return COST_MDC_USER + getCostByPath(path);
+        if (NETWORK_TYPE == networkType.PATH) {
+            ArrayList<Integer> path = Dijkstra.calculate(user.getConnectStubId(Timer.getCurrentTime()), dstNodeId);
+            return COST_MDC_USER + getCostByPath(path);
+        } else if (NETWORK_TYPE == networkType.WIRELESS) {
+            Point userPoint = user.getCurrentLocation(Timer.getCurrentTime());
+            Point dstPoint = Simulator.getSimulatedNodes().get(dstNodeId).getLocation();
+            return getCostByDistance(userPoint, dstPoint);
+        } else {
+            throw new Error("Network type is not defined");
+        }
     }
 
     private static double getCostByPath(ArrayList<Integer> path) {
@@ -61,6 +86,12 @@ public class NetworkAllocator {
             cost += links.get(path.get(i)).getCost();
         }
         return cost;
+    }
+
+    private static double getCostByDistance(Point src, Point dst) {
+        double distance = Math.sqrt(Math.pow(src.getX() - dst.getX(), 2) + Math.pow(src.getY() - dst.getY(), 2));
+        double maxDistance = Math.sqrt(MAP_WIDTH * MAP_WIDTH + MAP_HEIGHT * MAP_HEIGHT);
+        return PseudoCostFunctions.monotonicCostFunction(distance / maxDistance);
     }
 
     // public static ArrayList<Double> getLinkLoads() {

@@ -6,8 +6,10 @@ import static cmorph.settings.SimulationConfiguration.COST_DC_DC;
 import static cmorph.settings.SimulationConfiguration.COST_DC_MDC;
 import static cmorph.settings.SimulationConfiguration.DATA_CENTER_NUM;
 import static cmorph.settings.SimulationConfiguration.MICRO_DATA_CENTER_NUM;
+import static cmorph.settings.SimulationConfiguration.NETWORK_TYPE;
 import static cmorph.settings.SimulationConfiguration.USER_NUM;
 
+import cmorph.allocator.NetworkAllocator.networkType;
 import cmorph.entities.Link;
 import cmorph.entities.Node;
 import cmorph.entities.User;
@@ -39,44 +41,53 @@ public class SetUp {
     private static void setUpDC() {
 
         for (int id = 0; id < DATA_CENTER_NUM; id++) {
-            Point nodeLocation = NodeSetUp.getDCLocation(id);
+            Point nodeLocation = NodeSetUp.getDCLocation(id, DATA_CENTER_NUM);
             int containerNum = AVE_DC_CONTAINER_NUM;
             int costWeight = NodeSetUp.getNodeCostWeight(id);
             Node node = new Node(id, nodeLocation, containerNum, costWeight);
             Simulator.addNode(node);
         }
-        int linkId = 0;
-        ArrayList<Node> nodes = Simulator.getSimulatedNodes();
-        // DC(transit)ノードは相互に接続する
-        for (int i = 0; i < DATA_CENTER_NUM; i++) {
-            for (int j = 0; j < DATA_CENTER_NUM; j++) {
-                if (i == j) {
-                    continue;
+        if (NETWORK_TYPE == networkType.PATH) {
+            int linkId = 0;
+            ArrayList<Node> nodes = Simulator.getSimulatedNodes();
+            // DC(transit)ノードは相互に接続する
+            for (int i = 0; i < DATA_CENTER_NUM; i++) {
+                for (int j = 0; j < DATA_CENTER_NUM; j++) {
+                    if (i == j) {
+                        continue;
+                    }
+                    Link link = new Link(linkId, nodes.get(i), nodes.get(j), COST_DC_DC);
+                    Simulator.addLink(link);
+                    linkId++;
                 }
-                Link link = new Link(linkId, nodes.get(i), nodes.get(j), COST_DC_DC);
-                Simulator.addLink(link);
-                linkId++;
             }
         }
+
     }
 
     private static void setUpMDC() {
         int nextNodeId = Simulator.getSimulatedNodes().size();
         int nextLinkId = Simulator.getSimulatedLinks().size();
         for (int id = nextNodeId; id < DATA_CENTER_NUM + MICRO_DATA_CENTER_NUM; id++) {
-            Node transitNode = NodeSetUp.getTransitNode(id);
+            Node transitNode = NodeSetUp.getTransitNode(id, DATA_CENTER_NUM);
             // Nodeを追加
-            Point nodeLocation = NodeSetUp.getMDCLocation(transitNode);
+            Point nodeLocation = NodeSetUp.getMDCLocation(id, transitNode);
+
             int containerNum = AVE_MDC_CONTAINER_NUM;
             int costWeight = NodeSetUp.getNodeCostWeight(id);
             Node node = new Node(id, nodeLocation, containerNum, costWeight);
             Simulator.addNode(node);
             Simulator.addStub(node);
 
-            // Linkを追加
-            Link link = new Link(nextLinkId, transitNode, node, COST_DC_MDC);
-            Simulator.addLink(link);
-            nextLinkId++;
+            if (NETWORK_TYPE == networkType.PATH) {
+                if (transitNode != null) {
+                    // Linkを追加
+                    Link link = new Link(nextLinkId, transitNode, node, COST_DC_MDC);
+                    Simulator.addLink(link);
+                    nextLinkId++;
+                }
+            }
+
         }
     }
 

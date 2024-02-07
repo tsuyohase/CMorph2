@@ -32,6 +32,7 @@ public class UserSetUp {
         UP_LEFT_STAY,
         RANDOM_LOCATION_SATY,
         STRAIGHT_DOWN,
+        RANDOM_DOWN,
         RANDOM,
         TRANSIT_STUB,
     }
@@ -67,7 +68,7 @@ public class UserSetUp {
         } else if (USER_SPAWN_SCENARIO == UserSpawnScenario.WAVE) {
             spawnTime = 0;
         } else if (USER_SPAWN_SCENARIO == UserSpawnScenario.RANDOM) {
-            spawnTime = 0;
+            spawnTime = (long) (random.nextDouble() * END_TIME / 2);
         } else {
             throw new Error("UserSpawnScenario is not defined.");
         }
@@ -138,6 +139,13 @@ public class UserSetUp {
 
             // 下に一直線に移動するシナリオ
             return straightDownScenario(initPoint, spawnTime, despawnTime);
+        } else if (USER_LOCATION_SCENARIO == UserLocationScenario.RANDOM_DOWN) {
+            // ランダムに配置
+            initPoint = new Point(Math.random() * MAP_WIDTH, 0);
+
+            // 下に一直線に移動するシナリオ
+            return randomDownScenario(initPoint, spawnTime, despawnTime);
+
         } else if (USER_LOCATION_SCENARIO == UserLocationScenario.RANDOM) {
             // ランダムに配置
             initPoint = new Point(Math.random() * MAP_WIDTH, Math.random() * MAP_WIDTH);
@@ -191,6 +199,18 @@ public class UserSetUp {
     private static Scenario straightDownScenario(Point initPoint, long spawnTime, long despawnTime) {
         return (time) -> {
             double velocity = (double) MAP_HEIGHT / END_TIME;
+            if ((time >= spawnTime) && (time <= despawnTime)) {
+                return new Point(initPoint.getX(), initPoint.getY() + (time - spawnTime) * velocity);
+            } else {
+                return new Point(-1, -1);
+            }
+        };
+    }
+
+    private static Scenario randomDownScenario(Point initPoint, long spawnTime, long despawnTime) {
+        double velocity = random.nextDouble() * 2 * MAP_HEIGHT / END_TIME;
+
+        return (time) -> {
             if ((time >= spawnTime) && (time <= despawnTime)) {
                 return new Point(initPoint.getX(), initPoint.getY() + (time - spawnTime) * velocity);
             } else {

@@ -1,5 +1,6 @@
 package cmorph.settings;
 
+import cmorph.allocator.NetworkAllocator.networkType;
 import cmorph.allocator.PseudoCostFunctions.LoadCostFunctionType;
 import cmorph.allocator.PseudoCostFunctions.NetworkCostFunctionType;
 import cmorph.entities.Node;
@@ -16,8 +17,8 @@ public class SimulationConfiguration {
 
     // User
     public static final int USER_NUM = 100;
-    public static final UserLocationScenario USER_LOCATION_SCENARIO = UserLocationScenario.TRANSIT_STUB;
-    public static final UserSpawnScenario USER_SPAWN_SCENARIO = UserSpawnScenario.MOUNTAIN;
+    public static final UserLocationScenario USER_LOCATION_SCENARIO = UserLocationScenario.RANDOM_DOWN;
+    public static final UserSpawnScenario USER_SPAWN_SCENARIO = UserSpawnScenario.RANDOM;
 
     // Job
     public static final boolean RANDOM_JOB_TIME_SLOT = false;
@@ -31,11 +32,11 @@ public class SimulationConfiguration {
     public static final int DATA_INCENTIVE_BACK_WEIGHT = 10;
     public static final DataObjectTargetType DATA_OBJECT_TARGET_TYPE = DataObjectTargetType.DC;
     public static final int AVE_DATA_OBJECT_SIZE = 15000 / USER_NUM; // Kbit
-    public static final double INTERAXTIVE_JOB_PROBABILITY = 0.3;
+    public static final double INTERAXTIVE_JOB_PROBABILITY = 1;
 
     // Node
-    public static final int MICRO_DATA_CENTER_NUM = 2;
-    public static final int DATA_CENTER_NUM = 2;
+    public static final int MICRO_DATA_CENTER_NUM = 10;
+    public static final int DATA_CENTER_NUM = 4;
     public static final int AVE_MDC_CONTAINER_NUM = 100 * USER_NUM / MICRO_DATA_CENTER_NUM;
     public static final int AVE_DC_CONTAINER_NUM = 300 * USER_NUM / DATA_CENTER_NUM;
     public static final boolean RANDOM_DC_LOCATION = false;
@@ -45,9 +46,10 @@ public class SimulationConfiguration {
     public static final int COST_DC_DC = 1;
     public static final int COST_DC_MDC = 2;
     public static final int COST_MDC_USER = 2;
+    public static final networkType NETWORK_TYPE = networkType.WIRELESS;
 
     // AllocationServer
-    public static final LoadCostFunctionType LOAD_COST_FUNCTION_TYPE = LoadCostFunctionType.CONVEX;
+    public static final LoadCostFunctionType LOAD_COST_FUNCTION_TYPE = LoadCostFunctionType.MONOTONIC;
     public static final int TIME_UNIT_NUM = 1;
     public static final boolean useCostDifRandomization = true;
     public static final double COST_GAIN_THRESHOLD = 0.2;
