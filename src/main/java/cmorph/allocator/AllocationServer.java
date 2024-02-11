@@ -1,5 +1,6 @@
 package cmorph.allocator;
 
+import static cmorph.settings.SimulationConfiguration.AVE_JOB_TIME_SLOT;
 import static cmorph.settings.SimulationConfiguration.COST_MDC_USER;
 import static cmorph.settings.SimulationConfiguration.USER_NUM;
 
@@ -8,6 +9,7 @@ import java.util.Collections;
 
 import cmorph.entities.Link;
 import cmorph.entities.Node;
+import cmorph.entities.User;
 import cmorph.job.Job;
 import cmorph.logger.Logger;
 import cmorph.simulator.Simulator;

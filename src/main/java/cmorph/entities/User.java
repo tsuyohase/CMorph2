@@ -5,16 +5,21 @@ import static cmorph.settings.SimulationConfiguration.MAP_HEIGHT;
 import static cmorph.settings.SimulationConfiguration.MAP_WIDTH;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import cmorph.setUp.UserSetUp.Scenario;
 import cmorph.setUp.UserSetUp.UserType;
 import cmorph.simulator.Simulator;
+import cmorph.simulator.Timer;
 import cmorph.utils.Point;
 
 public class User {
     private final int userId;
     private final Scenario scenario;
     private final UserType userType;
+    private int connectNodeId = 0;
+    private LinkedHashMap<Long, Integer> connectNodeMap = new LinkedHashMap<Long, Integer>();
 
     public User(int userId, Scenario scenario, UserType userType) {
         this.userId = userId;
@@ -44,11 +49,39 @@ public class User {
                 && currentLocation.getY() <= MAP_HEIGHT);
     }
 
-    public int getConnectStubId(long time) {
+    public void setConnectNodeId(int connectNodeId, long time) {
+        this.connectNodeMap.put(time, connectNodeId);
+    }
+
+    public int getConnectNodeId(long time) {
+        int connectNodeId = 0;
+        for (Map.Entry<Long, Integer> entry : this.connectNodeMap.entrySet()) {
+            if (entry.getKey() <= time) {
+                connectNodeId = entry.getValue();
+            } else {
+                break;
+            }
+        }
+        return connectNodeId;
+    }
+
+    public void removeEndConnectNode(long time) {
+        ArrayList<Long> removeKeyList = new ArrayList<Long>();
+        for (Map.Entry<Long, Integer> entry : this.connectNodeMap.entrySet()) {
+            if (entry.getKey() < time) {
+                removeKeyList.add(entry.getKey());
+            }
+        }
+        for (int i = 0; i < removeKeyList.size(); i++) {
+            this.connectNodeMap.remove(removeKeyList.get(i));
+        }
+    }
+
+    public int getNearestNodeId() {
+        Point currentLocation = this.getCurrentLocation(Timer.getCurrentTime());
         ArrayList<Node> stubNodes = Simulator.getSimulatedStubs();
         int connectNodeId = 0;
         double minDistance = Double.MAX_VALUE;
-        Point currentLocation = this.scenario.apply(time);
         for (int i = 0; i < stubNodes.size(); i++) {
             double distance = currentLocation.getDistance(stubNodes.get(i).getLocation());
             if (distance < minDistance) {

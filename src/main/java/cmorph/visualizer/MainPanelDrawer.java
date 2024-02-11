@@ -33,9 +33,10 @@ public class MainPanelDrawer extends Thread {
     int userSize;
     int nodeSizeBase;
     int speed;
+    boolean isLink;
 
     public MainPanelDrawer(MainPanel mainPanel, int currentTime, boolean isPlaying, int speed,
-            JSlider slider, List<TimeStepData> data, ConfigData configData) {
+            JSlider slider, List<TimeStepData> data, ConfigData configData, boolean isLink) {
         this.data = data;
         this.configData = configData;
         this.currentTime = currentTime;
@@ -52,6 +53,7 @@ public class MainPanelDrawer extends Thread {
                 bufferedImage.getWidth() / ((configData.getDataCenterNum() + configData.getMicroDataCenterNum()) * 4),
                 15);
         userSize = Math.max(bufferedImage.getWidth() / configData.getUserNum(), 5);
+        this.isLink = isLink;
 
     }
 
@@ -207,11 +209,14 @@ public class MainPanelDrawer extends Thread {
             int userX = convertPoint(userState.getX());
             int userY = convertPoint(userState.getY());
 
-            if (userState.getX() >= 0 && userState.getY() >= 0) {
-                // int connectedNodeId = userState.getConnectedNodeId();
-                // drawDotLine(userX + userSize / 2, userY + userSize / 2,
-                // convertPoint(configData.getNodeXList().get(connectedNodeId)),
-                // convertPoint(configData.getNodeYList().get(connectedNodeId)));
+            if (userState.getX() >= 0 && userState.getY() >= 0 && userState.getX() <= MAP_WIDTH
+                    && userState.getY() <= MAP_HEIGHT) {
+                if (isLink) {
+                    int connectedNodeId = userState.getConnectedNodeId();
+                    drawDotLine(userX + userSize / 2, userY + userSize / 2,
+                            convertPoint(configData.getNodeXList().get(connectedNodeId)),
+                            convertPoint(configData.getNodeYList().get(connectedNodeId)));
+                }
 
                 if (userState.getUserType() == UserType.INTERACTIVE) {
                     threadGraphics.setColor(Color.RED);

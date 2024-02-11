@@ -49,7 +49,7 @@ public class SimulationConfiguration {
     public static final networkType NETWORK_TYPE = networkType.WIRELESS;
 
     // AllocationServer
-    public static final LoadCostFunctionType LOAD_COST_FUNCTION_TYPE = LoadCostFunctionType.MONOTONIC;
+    public static final LoadCostFunctionType LOAD_COST_FUNCTION_TYPE = LoadCostFunctionType.CONSTANT;
     public static final int TIME_UNIT_NUM = 1;
     public static final boolean useCostDifRandomization = true;
     public static final double COST_GAIN_THRESHOLD = 0.2;

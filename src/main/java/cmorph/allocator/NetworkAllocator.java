@@ -1,6 +1,7 @@
 package cmorph.allocator;
 
 import static cmorph.settings.SimulationConfiguration.COST_MDC_USER;
+import static cmorph.settings.SimulationConfiguration.DATA_CENTER_NUM;
 import static cmorph.settings.SimulationConfiguration.MAP_HEIGHT;
 import static cmorph.settings.SimulationConfiguration.MAP_WIDTH;
 import static cmorph.settings.SimulationConfiguration.NETWORK_TYPE;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import cmorph.entities.Link;
+import cmorph.entities.Node;
 import cmorph.entities.User;
 import cmorph.simulator.Simulator;
 import cmorph.simulator.Timer;
@@ -65,7 +67,7 @@ public class NetworkAllocator {
 
     public static double getFrontendPathCost(User user, int dstNodeId) {
         if (NETWORK_TYPE == networkType.PATH) {
-            ArrayList<Integer> path = Dijkstra.calculate(user.getConnectStubId(Timer.getCurrentTime()), dstNodeId);
+            ArrayList<Integer> path = Dijkstra.calculate(user.getNearestNodeId(), dstNodeId);
             return COST_MDC_USER + getCostByPath(path);
         } else if (NETWORK_TYPE == networkType.WIRELESS) {
             Point userPoint = user.getCurrentLocation(Timer.getCurrentTime());

@@ -3,6 +3,7 @@ package cmorph.allocator;
 import static cmorph.settings.SimulationConfiguration.COST_GAIN_THRESHOLD;
 import static cmorph.settings.SimulationConfiguration.COST_MDC_USER;
 import static cmorph.settings.SimulationConfiguration.ELAPSED_TIME_THRESHOLD;
+import static cmorph.settings.SimulationConfiguration.NETWORK_TYPE;
 import static cmorph.settings.SimulationConfiguration.USER_NUM;
 import static cmorph.settings.SimulationConfiguration.useCostDifRandomization;
 import static cmorph.settings.SimulationConfiguration.useMigTimeRandomization;
@@ -11,6 +12,7 @@ import static cmorph.simulator.Main.random;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import cmorph.allocator.NetworkAllocator.networkType;
 import cmorph.entities.Link;
 import cmorph.job.Job;
 import cmorph.simulator.Simulator;
@@ -74,6 +76,12 @@ public class Forwarder {
                 lastMigrateTimeList.set(userId, Timer.getCurrentTime());
 
                 Simulator.getSimulatedNodes().get(bestNodeId).receiveJob(job);
+
+                if (NETWORK_TYPE == networkType.PATH) {
+                    job.getUser().setConnectNodeId(job.getUser().getNearestNodeId(), Timer.getCurrentTime());
+                } else if (NETWORK_TYPE == networkType.WIRELESS) {
+                    job.getUser().setConnectNodeId(bestNodeId, Timer.getCurrentTime());
+                }
                 // forwardJobToNetwork(job, bestBackendPath);
             } else {
                 // 変更しない場合

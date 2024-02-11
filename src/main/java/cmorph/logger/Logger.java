@@ -59,7 +59,7 @@ public class Logger {
         List<NodeState> nodeStates = new ArrayList<>();
         for (User user : Simulator.getSimulatedUsers()) {
             userStates.add(new UserState(user.getUserId(), user.getScenario().apply(time).getX(),
-                    user.getScenario().apply(time).getY(), user.getConnectStubId(time), user.getUserType()));
+                    user.getScenario().apply(time).getY(), user.getConnectNodeId(time), user.getUserType()));
         }
         for (Node node : Simulator.getSimulatedNodes()) {
             nodeStates.add(new NodeState(node.getLoad(time)));
