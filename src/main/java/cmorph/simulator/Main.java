@@ -37,12 +37,18 @@ public class Main {
      */
     public static void main(String[] args) {
         setupLogger();
+        AnalysisLogger.initLog();
+        AnalysisLogger.addConfigData();
+
         SetUp.setUp();
         while (Timer.getEvent() != null) {
             Timer.runEvent();
         }
 
         Logger.log();
+
+        AnalysisLogger.addSimulationData();
         AnalysisLogger.addSimulationResult();
+        AnalysisLogger.endLog();
     }
 }
