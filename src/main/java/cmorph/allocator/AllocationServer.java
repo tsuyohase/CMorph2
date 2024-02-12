@@ -11,6 +11,7 @@ import cmorph.entities.Link;
 import cmorph.entities.Node;
 import cmorph.entities.User;
 import cmorph.job.Job;
+import cmorph.logger.AnalysisLogger;
 import cmorph.logger.Logger;
 import cmorph.simulator.Simulator;
 import cmorph.simulator.Timer;
@@ -38,6 +39,7 @@ public class AllocationServer {
 
             // loggerにデータを追加
             Logger.addTimeStepData(updateTime, Timer.getCurrentTime());
+            AnalysisLogger.addData(updateTime, Timer.getCurrentTime());
 
             // 終了したジョブを削除
             removeEndJob();

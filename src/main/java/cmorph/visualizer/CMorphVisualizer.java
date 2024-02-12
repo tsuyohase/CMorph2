@@ -41,7 +41,7 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
     ChartPanelDrawer loadChartPanelDrawer;
     List<TimeStepData> data;
     ConfigData configData;
-    String folderPath = "src/dist/output/";
+    String folderPath = "src/dist/output/visualize/";
     List<String> outputFileNames;
 
     public CMorphVisualizer() {

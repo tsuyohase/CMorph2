@@ -29,7 +29,7 @@ public class Logger {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         String formatNowDate = dtf.format(nowDate);
         String fileName = "output-" + formatNowDate + ".json";
-        String filePath = "src/dist/output/" + fileName;
+        String filePath = "src/dist/output/visualize/" + fileName;
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
