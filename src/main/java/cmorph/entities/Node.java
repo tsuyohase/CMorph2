@@ -16,6 +16,7 @@ public class Node {
     private final Point location;
     private final int containerNum;
     private final int costWeight;
+    private final double loadThreshold;
 
     /**
      * ノードに割り当てられたジョブを終了時間の遅い順で並べた配列
@@ -29,11 +30,12 @@ public class Node {
      * @param location
      * @param containerNum
      */
-    public Node(int nodeId, Point location, int containerNum, int costWeight) {
+    public Node(int nodeId, Point location, int containerNum, int costWeight, double loadThreshold) {
         this.nodeId = nodeId;
         this.location = location;
         this.containerNum = containerNum;
         this.costWeight = costWeight;
+        this.loadThreshold = loadThreshold;
     }
 
     /**
@@ -125,5 +127,9 @@ public class Node {
 
     public int getCostWeight() {
         return this.costWeight;
+    }
+
+    public double getLoadThrethold() {
+        return this.loadThreshold;
     }
 }

@@ -56,6 +56,7 @@ public class ConfigData {
     private ArrayList<Double> nodeXList;
     private ArrayList<Double> nodeYList;
     private ArrayList<Integer> nodeContainerNumList;
+    private ArrayList<Double> nodeLoadThresholdList;
 
     private ArrayList<Integer> linkSrcList;
     private ArrayList<Integer> linkDstList;
@@ -104,11 +105,13 @@ public class ConfigData {
         this.nodeXList = new ArrayList<>();
         this.nodeYList = new ArrayList<>();
         this.nodeContainerNumList = new ArrayList<>();
+        this.nodeLoadThresholdList = new ArrayList<>();
         for (int i = 0; i < SimulationConfiguration.MICRO_DATA_CENTER_NUM
                 + SimulationConfiguration.DATA_CENTER_NUM; i++) {
             this.nodeXList.add(nodes.get(i).getLocation().getX());
             this.nodeYList.add(nodes.get(i).getLocation().getY());
             this.nodeContainerNumList.add(nodes.get(i).getContainerNum());
+            this.nodeLoadThresholdList.add(nodes.get(i).getLoadThrethold());
         }
         this.linkSrcList = new ArrayList<>();
         this.linkDstList = new ArrayList<>();
@@ -262,6 +265,10 @@ public class ConfigData {
 
     public ArrayList<Integer> getNodeContainerNumList() {
         return nodeContainerNumList;
+    }
+
+    public ArrayList<Double> getNodeLoadThresholdList() {
+        return nodeLoadThresholdList;
     }
 
     public ArrayList<Integer> getLinkSrcList() {

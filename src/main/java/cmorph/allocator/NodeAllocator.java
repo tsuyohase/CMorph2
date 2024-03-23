@@ -53,7 +53,8 @@ public class NodeAllocator {
     }
 
     public static double getNodeCost(int nodeId) {
-        return PseudoCostFunctions.getLoadCost(nodeLoads.get(nodeId))
+        return PseudoCostFunctions.getLoadCost(nodeLoads.get(nodeId),
+                Simulator.getSimulatedNodes().get(nodeId).getLoadThrethold())
                 * Simulator.getSimulatedNodes().get(nodeId).getCostWeight();
     }
 

@@ -20,11 +20,13 @@ public class User {
     private final UserType userType;
     private int connectNodeId = 0;
     private LinkedHashMap<Long, Integer> connectNodeMap = new LinkedHashMap<Long, Integer>();
+    private final double networkThreshold;
 
-    public User(int userId, Scenario scenario, UserType userType) {
+    public User(int userId, Scenario scenario, UserType userType, double networkThreshold) {
         this.userId = userId;
         this.scenario = scenario;
         this.userType = userType;
+        this.networkThreshold = networkThreshold;
     }
 
     public int getUserId() {
@@ -90,5 +92,9 @@ public class User {
             }
         }
         return connectNodeId;
+    }
+
+    public double getNetworkThreshold() {
+        return this.networkThreshold;
     }
 }

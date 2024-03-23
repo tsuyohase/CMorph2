@@ -4,12 +4,16 @@ import static cmorph.settings.SimulationConfiguration.COST_MDC_USER;
 import static cmorph.settings.SimulationConfiguration.DATA_CENTER_NUM;
 import static cmorph.settings.SimulationConfiguration.MAP_HEIGHT;
 import static cmorph.settings.SimulationConfiguration.MAP_WIDTH;
+import static cmorph.settings.SimulationConfiguration.NETWORK_COST_FUNCTION_TYPE;
+import static cmorph.settings.SimulationConfiguration.NETWORK_DISTANCE_LIMIT;
 import static cmorph.settings.SimulationConfiguration.NETWORK_TYPE;
 import static cmorph.settings.SimulationConfiguration.TIME_UNIT_NUM;
 import static cmorph.settings.SimulationConfiguration.USER_NUM;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import com.fasterxml.jackson.core.Base64Variant.PaddingReadBehaviour;
 
 import cmorph.entities.Link;
 import cmorph.entities.Node;
@@ -59,7 +63,7 @@ public class NetworkAllocator {
         } else if (NETWORK_TYPE == networkType.WIRELESS) {
             Point srcPoint = Simulator.getSimulatedNodes().get(srcNodeId).getLocation();
             Point dstPoint = Simulator.getSimulatedNodes().get(dstNodeId).getLocation();
-            return getCostByDistance(srcPoint, dstPoint);
+            return getCostByDistance(srcPoint, dstPoint, NETWORK_DISTANCE_LIMIT);
         } else {
             throw new Error("Network type is not defined");
         }
@@ -72,7 +76,7 @@ public class NetworkAllocator {
         } else if (NETWORK_TYPE == networkType.WIRELESS) {
             Point userPoint = user.getCurrentLocation(Timer.getCurrentTime());
             Point dstPoint = Simulator.getSimulatedNodes().get(dstNodeId).getLocation();
-            return getCostByDistance(userPoint, dstPoint);
+            return getCostByDistance(userPoint, dstPoint, user.getNetworkThreshold());
         } else {
             throw new Error("Network type is not defined");
         }
@@ -90,10 +94,21 @@ public class NetworkAllocator {
         return cost;
     }
 
-    private static double getCostByDistance(Point src, Point dst) {
+    private static double getCostByDistance(Point src, Point dst, double networkThreshold) {
         double distance = Math.sqrt(Math.pow(src.getX() - dst.getX(), 2) + Math.pow(src.getY() - dst.getY(), 2));
-        double maxDistance = Math.sqrt(MAP_WIDTH * MAP_WIDTH + MAP_HEIGHT * MAP_HEIGHT);
-        return PseudoCostFunctions.monotonicCostFunction(distance / maxDistance);
+        if (NETWORK_COST_FUNCTION_TYPE == PseudoCostFunctions.NetworkCostFunctionType.MONOTONIC) {
+            return PseudoCostFunctions.monotonicCostFunction(distance / NETWORK_DISTANCE_LIMIT);
+        } else if (NETWORK_COST_FUNCTION_TYPE == PseudoCostFunctions.NetworkCostFunctionType.CONVEX) {
+            return PseudoCostFunctions.convexPseudoCostFunction(distance / NETWORK_DISTANCE_LIMIT);
+        } else if (NETWORK_COST_FUNCTION_TYPE == PseudoCostFunctions.NetworkCostFunctionType.BINARY) {
+            return PseudoCostFunctions.getNetworkBinaryCost(distance / networkThreshold, networkThreshold);
+        } else if (NETWORK_COST_FUNCTION_TYPE == PseudoCostFunctions.NetworkCostFunctionType.MONOTONIC_BINARY) {
+            return PseudoCostFunctions.getNetworkMonotonicBinaryCost(distance, networkThreshold);
+        } else if (NETWORK_COST_FUNCTION_TYPE == PseudoCostFunctions.NetworkCostFunctionType.CONSTANT) {
+            return 1;
+        } else {
+            throw new Error("Network cost function type is not defined");
+        }
     }
 
     // public static ArrayList<Double> getLinkLoads() {

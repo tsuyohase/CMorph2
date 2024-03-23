@@ -198,7 +198,7 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
     }
 
     private void setConfigPanel() {
-        configPanel.setLayout(new GridLayout(10, 10, 0, 0));
+        configPanel.setLayout(new GridLayout(15, 15, 0, 0));
         // configPanel.add(new JLabel("MAP_WIDTH: " + configData.getMapWidth()));
         // configPanel.add(new JLabel("MAP_HEIGHT: " + configData.getMapHeight()));
         configPanel.add(new JLabel("MICRO_DATA_CENTER_NUM: " + configData.getMicroDataCenterNum()));

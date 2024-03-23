@@ -6,6 +6,8 @@ import static cmorph.settings.SimulationConfiguration.INTERAXTIVE_JOB_PROBABILIT
 import static cmorph.settings.SimulationConfiguration.MAP_HEIGHT;
 import static cmorph.settings.SimulationConfiguration.MAP_WIDTH;
 import static cmorph.settings.SimulationConfiguration.MICRO_DATA_CENTER_NUM;
+import static cmorph.settings.SimulationConfiguration.NETWORK_DISTANCE_LIMIT;
+import static cmorph.settings.SimulationConfiguration.RANDOM_NETWORK_THRESHOLD;
 import static cmorph.settings.SimulationConfiguration.USER_LOCATION_SCENARIO;
 import static cmorph.settings.SimulationConfiguration.USER_NUM;
 import static cmorph.settings.SimulationConfiguration.USER_SPAWN_SCENARIO;
@@ -68,7 +70,7 @@ public class UserSetUp {
         } else if (USER_SPAWN_SCENARIO == UserSpawnScenario.WAVE) {
             spawnTime = 0;
         } else if (USER_SPAWN_SCENARIO == UserSpawnScenario.RANDOM) {
-            spawnTime = (long) (random.nextDouble() * END_TIME / 2);
+            spawnTime = (long) (random.nextDouble() * END_TIME);
         } else {
             throw new Error("UserSpawnScenario is not defined.");
         }
@@ -99,10 +101,21 @@ public class UserSetUp {
     }
 
     public static UserType getUserType(int id) {
+        if (MICRO_DATA_CENTER_NUM == 0) {
+            return UserType.INTERACTIVE;
+        }
         if (id % MICRO_DATA_CENTER_NUM <= (int) (MICRO_DATA_CENTER_NUM * INTERAXTIVE_JOB_PROBABILITY)) {
             return UserType.INTERACTIVE;
         } else {
             return UserType.DATA_INCENTIVE;
+        }
+    }
+
+    public static double getNetworkThreshold(int id) {
+        if (RANDOM_NETWORK_THRESHOLD) {
+            return random.nextDouble() * NETWORK_DISTANCE_LIMIT * 0.5;
+        } else {
+            return NETWORK_DISTANCE_LIMIT;
         }
     }
 
@@ -208,7 +221,7 @@ public class UserSetUp {
     }
 
     private static Scenario randomDownScenario(Point initPoint, long spawnTime, long despawnTime) {
-        double velocity = random.nextDouble() * 2 * MAP_HEIGHT / END_TIME;
+        double velocity = (0.5 + random.nextDouble()) * 10 * MAP_HEIGHT / END_TIME;
 
         return (time) -> {
             if ((time >= spawnTime) && (time <= despawnTime)) {
@@ -228,12 +241,13 @@ public class UserSetUp {
      * @return Scenario
      */
     private static Scenario randomScenario(Point initPoint, long spawnTime, long despawnTime) {
+        double xVelocity = random.nextDouble() * 10 * MAP_WIDTH / END_TIME;
+        double yVelocity = random.nextDouble() * 10 * MAP_HEIGHT / END_TIME;
+
         return (time) -> {
-            double xVelocity = random.nextDouble() * MAP_WIDTH / END_TIME;
-            double yVelocity = random.nextDouble() * MAP_HEIGHT / END_TIME;
             if ((time >= spawnTime) && (time <= despawnTime)) {
-                return new Point(initPoint.getX() + (time - spawnTime) * xVelocity,
-                        initPoint.getY() + (time - spawnTime) * yVelocity);
+                return new Point((initPoint.getX() + (time - spawnTime) * xVelocity),
+                        (initPoint.getY() + (time - spawnTime) * yVelocity));
             } else {
                 return new Point(-1, -1);
             }

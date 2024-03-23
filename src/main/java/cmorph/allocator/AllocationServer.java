@@ -3,6 +3,7 @@ package cmorph.allocator;
 import static cmorph.settings.SimulationConfiguration.AVE_JOB_TIME_SLOT;
 import static cmorph.settings.SimulationConfiguration.COST_MDC_USER;
 import static cmorph.settings.SimulationConfiguration.USER_NUM;
+import static cmorph.simulator.Main.random;
 
 import java.util.ArrayList;
 import java.util.Collections;

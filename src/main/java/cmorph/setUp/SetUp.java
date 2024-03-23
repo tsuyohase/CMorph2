@@ -44,7 +44,8 @@ public class SetUp {
             Point nodeLocation = NodeSetUp.getDCLocation(id, DATA_CENTER_NUM);
             int containerNum = AVE_DC_CONTAINER_NUM;
             int costWeight = NodeSetUp.getNodeCostWeight(id);
-            Node node = new Node(id, nodeLocation, containerNum, costWeight);
+            double loadThreshold = NodeSetUp.getLoadThreshold(id);
+            Node node = new Node(id, nodeLocation, containerNum, costWeight, loadThreshold);
             Simulator.addNode(node);
         }
         if (NETWORK_TYPE == networkType.PATH) {
@@ -75,7 +76,8 @@ public class SetUp {
 
             int containerNum = AVE_MDC_CONTAINER_NUM;
             int costWeight = NodeSetUp.getNodeCostWeight(id);
-            Node node = new Node(id, nodeLocation, containerNum, costWeight);
+            double loadThreshold = NodeSetUp.getLoadThreshold(id);
+            Node node = new Node(id, nodeLocation, containerNum, costWeight, loadThreshold);
             Simulator.addNode(node);
             Simulator.addStub(node);
 
@@ -109,7 +111,9 @@ public class SetUp {
             // usertypeを取得
             UserType userType = UserSetUp.getUserType(id);
 
-            User user = new User(id, scenario, userType);
+            double networkThreshold = UserSetUp.getNetworkThreshold(id);
+
+            User user = new User(id, scenario, userType, networkThreshold);
             Simulator.addUser(user);
 
             // ユーザごとに最初のJobを生成

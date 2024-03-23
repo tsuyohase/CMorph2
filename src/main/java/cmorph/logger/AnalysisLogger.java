@@ -19,6 +19,7 @@ public class AnalysisLogger {
     private static ArrayList<Double> nodeXList = new ArrayList<>();
     private static ArrayList<Double> nodeYList = new ArrayList<>();
     private static ArrayList<Integer> nodeContainerNumList = new ArrayList<>();
+    private static ArrayList<Double> nodeLoadThresholdList = new ArrayList<>();
 
     private static ArrayList<Integer> linkSrcList = new ArrayList<>();
     private static ArrayList<Integer> linkDstList = new ArrayList<>();
@@ -29,6 +30,8 @@ public class AnalysisLogger {
     private static ArrayList<ArrayList<Integer>> userConnectionList = new ArrayList<>();
     private static ArrayList<ArrayList<Double>> userXList = new ArrayList<>();
     private static ArrayList<ArrayList<Double>> userYList = new ArrayList<>();
+    private static ArrayList<Double> userNetworkThresholdList = new ArrayList<>();
+    private static ArrayList<ArrayList<Double>> userConnectionDistanceList = new ArrayList<>();
 
     private static long lastAddedTime = 0;
 
@@ -94,6 +97,7 @@ public class AnalysisLogger {
             nodeXList.add(node.getLocation().getX());
             nodeYList.add(node.getLocation().getY());
             nodeContainerNumList.add(node.getContainerNum());
+            nodeLoadThresholdList.add(node.getLoadThrethold());
         }
 
         for (Link link : Simulator.getSimulatedLinks()) {
@@ -104,14 +108,19 @@ public class AnalysisLogger {
 
         for (User user : Simulator.getSimulatedUsers()) {
             userTypeList.add("\"" + user.getUserType().toString() + "\"");
+            userNetworkThresholdList.add(user.getNetworkThreshold());
         }
 
-        logger.print("\"node-x-list\" :" + nodeXList + ",\n");
-        logger.print("\"node-y-list\" :" + nodeYList + ",\n");
-        logger.print("\"link-src-list\" :" + linkSrcList + ",\n");
-        logger.print("\"link-dst-list\" :" + linkDstList + ",\n");
-        logger.print("\"link-cost-list\" :" + linkCostList + ",\n");
-        logger.print("\"user-type-list\" :" + userTypeList + ",\n");
+        // logger.print("\"node-x-list\" :" + nodeXList + ",\n");
+        // logger.print("\"node-y-list\" :" + nodeYList + ",\n");
+        // logger.print("\"node-load-threshold-list\" :" + nodeLoadThresholdList +
+        // ",\n");
+        // logger.print("\"link-src-list\" :" + linkSrcList + ",\n");
+        // logger.print("\"link-dst-list\" :" + linkDstList + ",\n");
+        // logger.print("\"link-cost-list\" :" + linkCostList + ",\n");
+        // logger.print("\"user-type-list\" :" + userTypeList + ",\n");
+        // logger.print("\"user-network-threshold-list\" :" + userNetworkThresholdList +
+        // ",\n");
     }
 
     public static void addSimulationResult() {
@@ -119,9 +128,10 @@ public class AnalysisLogger {
             addTimeStepData(time);
         }
         logger.print("\"node-load-list\" :" + nodeLoadList + ",\n");
-        logger.print("\"user-x-list\" :" + userXList + ",\n");
-        logger.print("\"user-y-list\" :" + userYList + ",\n");
-        logger.print("\"user-connection-list\" :" + userConnectionList);
+        // logger.print("\"user-x-list\" :" + userXList + ",\n");
+        // logger.print("\"user-y-list\" :" + userYList + ",\n");
+        // logger.print("\"user-connection-list\" :" + userConnectionList);
+        logger.print("\"user-connection-distance-list\" :" + userConnectionDistanceList);
     }
 
     public static void addData(long startTime, long endTime) {
@@ -136,6 +146,7 @@ public class AnalysisLogger {
         ArrayList<Integer> userConnction = new ArrayList<>();
         ArrayList<Double> userX = new ArrayList<>();
         ArrayList<Double> userY = new ArrayList<>();
+        ArrayList<Double> userConnectionDistance = new ArrayList<>();
 
         for (Node node : Simulator.getSimulatedNodes()) {
             nodeLoad.add(node.getLoad(time));
@@ -146,11 +157,18 @@ public class AnalysisLogger {
             Point userPosition = user.getScenario().apply(time);
             userX.add(userPosition.getX());
             userY.add(userPosition.getY());
+            double distance = 0;
+            if (user.isActive(time)) {
+                distance = userPosition
+                        .getDistance(Simulator.getSimulatedNodes().get(user.getConnectNodeId(time)).getLocation());
+            }
+            userConnectionDistance.add(distance);
         }
 
         nodeLoadList.add(nodeLoad);
         userConnectionList.add(userConnction);
         userXList.add(userX);
         userYList.add(userY);
+        userConnectionDistanceList.add(userConnectionDistance);
     }
 }

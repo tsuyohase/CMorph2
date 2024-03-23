@@ -3,11 +3,13 @@ package cmorph.setUp;
 import static cmorph.settings.SimulationConfiguration.AVE_DC_CONTAINER_NUM;
 import static cmorph.settings.SimulationConfiguration.AVE_MDC_CONTAINER_NUM;
 import static cmorph.settings.SimulationConfiguration.DATA_CENTER_NUM;
+import static cmorph.settings.SimulationConfiguration.LOAD_COST_THRESHOLD;
 import static cmorph.settings.SimulationConfiguration.MAP_HEIGHT;
 import static cmorph.settings.SimulationConfiguration.MAP_WIDTH;
 import static cmorph.settings.SimulationConfiguration.MICRO_DATA_CENTER_NUM;
 import static cmorph.settings.SimulationConfiguration.NODE_COST_WEIGHT_TYPE;
 import static cmorph.settings.SimulationConfiguration.RANDOM_DC_LOCATION;
+import static cmorph.settings.SimulationConfiguration.RANDOM_THRETHOLD;
 
 import cmorph.utils.Point;
 import static cmorph.simulator.Main.random;
@@ -108,6 +110,14 @@ public class NodeSetUp {
             return (int) Math.pow(2, id);
         } else {
             throw new Error("NodeCostWeightType is not defined.");
+        }
+    }
+
+    public static double getLoadThreshold(int id) {
+        if (RANDOM_THRETHOLD) {
+            return random.nextDouble() * (0.9 - LOAD_COST_THRESHOLD) * 2 + 2 * LOAD_COST_THRESHOLD - 1;
+        } else {
+            return LOAD_COST_THRESHOLD;
         }
     }
 }
