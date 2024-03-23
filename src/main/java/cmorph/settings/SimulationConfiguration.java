@@ -29,7 +29,7 @@ public class SimulationConfiguration {
         public static final boolean RANDOM_JOB_TIME_SLOT = true;
         public static final boolean RANDOM_JOB_CONTAINER_NUM = false;
         public static final double RANDOMIZE_RATE = 0.5;
-        public static final int AVE_JOB_TIME_SLOT = USER_NUM;
+        public static final int AVE_JOB_TIME_SLOT = 40;
         public static final int AVE_JOB_CONTAINER_NUM = 100;
         public static final int INTERACTIVE_FRONT_WEIGHT = 100;
         public static final int INTERACTIVE_BACK_WEIGHT = 0;
