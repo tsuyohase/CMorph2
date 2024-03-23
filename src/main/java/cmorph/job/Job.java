@@ -1,6 +1,5 @@
 package cmorph.job;
 
-import static cmorph.settings.SimulationConfiguration.AVE_DATA_OBJECT_SIZE;
 import static cmorph.settings.SimulationConfiguration.AVE_JOB_CONTAINER_NUM;
 import static cmorph.settings.SimulationConfiguration.AVE_JOB_TIME_SLOT;
 import static cmorph.settings.SimulationConfiguration.RANDOMIZE_RATE;

@@ -3,10 +3,11 @@ package cmorph.setUp;
 import static cmorph.settings.SimulationConfiguration.DATA_CENTER_NUM;
 import static cmorph.settings.SimulationConfiguration.END_TIME;
 import static cmorph.settings.SimulationConfiguration.INTERAXTIVE_JOB_PROBABILITY;
+import static cmorph.settings.SimulationConfiguration.IS_ROOP;
 import static cmorph.settings.SimulationConfiguration.MAP_HEIGHT;
 import static cmorph.settings.SimulationConfiguration.MAP_WIDTH;
 import static cmorph.settings.SimulationConfiguration.MICRO_DATA_CENTER_NUM;
-import static cmorph.settings.SimulationConfiguration.NETWORK_DISTANCE_LIMIT;
+import static cmorph.settings.SimulationConfiguration.NETWORK_DISTANCE_THRESHOLD;
 import static cmorph.settings.SimulationConfiguration.RANDOM_NETWORK_THRESHOLD;
 import static cmorph.settings.SimulationConfiguration.USER_LOCATION_SCENARIO;
 import static cmorph.settings.SimulationConfiguration.USER_NUM;
@@ -113,9 +114,9 @@ public class UserSetUp {
 
     public static double getNetworkThreshold(int id) {
         if (RANDOM_NETWORK_THRESHOLD) {
-            return random.nextDouble() * NETWORK_DISTANCE_LIMIT * 0.5;
+            return random.nextDouble() * NETWORK_DISTANCE_THRESHOLD * 0.5;
         } else {
-            return NETWORK_DISTANCE_LIMIT;
+            return NETWORK_DISTANCE_THRESHOLD;
         }
     }
 
@@ -154,7 +155,7 @@ public class UserSetUp {
             return straightDownScenario(initPoint, spawnTime, despawnTime);
         } else if (USER_LOCATION_SCENARIO == UserLocationScenario.RANDOM_DOWN) {
             // ランダムに配置
-            initPoint = new Point(Math.random() * MAP_WIDTH, 0);
+            initPoint = new Point(random.nextDouble() * MAP_WIDTH, random.nextDouble() * MAP_WIDTH);
 
             // 下に一直線に移動するシナリオ
             return randomDownScenario(initPoint, spawnTime, despawnTime);
@@ -213,7 +214,7 @@ public class UserSetUp {
         return (time) -> {
             double velocity = (double) MAP_HEIGHT / END_TIME;
             if ((time >= spawnTime) && (time <= despawnTime)) {
-                return new Point(initPoint.getX(), initPoint.getY() + (time - spawnTime) * velocity);
+                return roopPoint(new Point(initPoint.getX(), initPoint.getY() + (time - spawnTime) * velocity));
             } else {
                 return new Point(-1, -1);
             }
@@ -225,7 +226,7 @@ public class UserSetUp {
 
         return (time) -> {
             if ((time >= spawnTime) && (time <= despawnTime)) {
-                return new Point(initPoint.getX(), initPoint.getY() + (time - spawnTime) * velocity);
+                return roopPoint(new Point(initPoint.getX(), initPoint.getY() + (time - spawnTime) * velocity));
             } else {
                 return new Point(-1, -1);
             }
@@ -246,12 +247,33 @@ public class UserSetUp {
 
         return (time) -> {
             if ((time >= spawnTime) && (time <= despawnTime)) {
-                return new Point((initPoint.getX() + (time - spawnTime) * xVelocity),
-                        (initPoint.getY() + (time - spawnTime) * yVelocity));
+                return roopPoint(new Point((initPoint.getX() + (time - spawnTime) * xVelocity),
+                        (initPoint.getY() + (time - spawnTime) * yVelocity)));
             } else {
                 return new Point(-1, -1);
             }
         };
+    }
+
+    /**
+     * マップの端を超えた場合にループさせるかどうかを決めて返す
+     * 
+     * @param point
+     * @return Point
+     */
+    private static Point roopPoint(Point point) {
+        if (IS_ROOP) {
+            double x = point.getX();
+            double y = point.getY();
+            double buffer = MAP_HEIGHT / 3;
+            x = (x + (MAP_WIDTH + buffer) * 1000) % (MAP_WIDTH + buffer);
+            y = (y + (MAP_HEIGHT + buffer) * 1000) % (MAP_HEIGHT + buffer);
+
+            return new Point(x, y);
+        } else {
+            return point;
+        }
+
     }
 
 }

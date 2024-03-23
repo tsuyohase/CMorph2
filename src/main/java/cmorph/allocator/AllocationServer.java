@@ -2,6 +2,7 @@ package cmorph.allocator;
 
 import static cmorph.settings.SimulationConfiguration.AVE_JOB_TIME_SLOT;
 import static cmorph.settings.SimulationConfiguration.COST_MDC_USER;
+import static cmorph.settings.SimulationConfiguration.COST_MIGRATE_TYPE;
 import static cmorph.settings.SimulationConfiguration.USER_NUM;
 import static cmorph.simulator.Main.random;
 
@@ -18,6 +19,11 @@ import cmorph.simulator.Simulator;
 import cmorph.simulator.Timer;
 
 public class AllocationServer {
+    public static enum CostMigrateType {
+        SUM,
+        MAX
+    }
+
     /**
      * 状態を更新した時間
      */
@@ -64,7 +70,7 @@ public class AllocationServer {
         for (int i = 0; i < simulatedNodes.size(); i++) {
 
             double cost = Double.MAX_VALUE;
-            if (NodeAllocator.getRemainingContainerNums().get(i) >= job.getUseContainerNum()) {
+            if (NodeAllocator.getRemainingContainerNums(i) >= job.getUseContainerNum()) {
                 cost = getCost(job, i);
 
                 if (cost < bestCost) {
@@ -80,12 +86,17 @@ public class AllocationServer {
     }
 
     public static double getCost(Job job, int nodeId) {
-        double loadCost = NodeAllocator.getNodeCost(nodeId);
+        double loadCost = NodeAllocator.getNodeCost(nodeId) * job.getUseContainerNum();
         double frontendPathCost = NetworkAllocator.getFrontendPathCost(
-                job.getUser(), nodeId);
+                job.getUser(), nodeId) * job.getFrontWeight();
         double backendPathCost = NetworkAllocator.getBackendPathCost(nodeId,
-                job.getDataObjectNode().getNodeId());
-        return loadCost * job.getUseContainerNum() + frontendPathCost * job.getFrontWeight()
-                + backendPathCost * job.getBackWeight();
+                job.getDataObjectNode().getNodeId()) * job.getBackWeight();
+        double cost = 0;
+        if (COST_MIGRATE_TYPE == CostMigrateType.MAX) {
+            cost = Math.max(loadCost, frontendPathCost + backendPathCost);
+        } else if (COST_MIGRATE_TYPE == CostMigrateType.SUM) {
+            cost = loadCost + frontendPathCost + backendPathCost;
+        }
+        return cost;
     }
 }

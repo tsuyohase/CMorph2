@@ -51,6 +51,7 @@ public class AnalysisLogger {
         logger.print(
                 "\"user-location-scenario\" :" + "\"" + SimulationConfiguration.USER_LOCATION_SCENARIO + "\"" + ",\n");
         logger.print("\"user-spawn-scenario\" :" + "\"" + SimulationConfiguration.USER_SPAWN_SCENARIO + "\"" + ",\n");
+        logger.print("\"is-roop\" :" + SimulationConfiguration.IS_ROOP + ",\n");
 
         logger.print("\"random-job-time-slot\" :" + SimulationConfiguration.RANDOM_JOB_TIME_SLOT + ",\n");
         logger.print("\"random-job-container-num\" :" + SimulationConfiguration.RANDOM_JOB_CONTAINER_NUM + ",\n");
@@ -64,7 +65,6 @@ public class AnalysisLogger {
         logger.print(
                 "\"data-object-target-type\" :" + "\"" + SimulationConfiguration.DATA_OBJECT_TARGET_TYPE.toString()
                         + "\"" + ",\n");
-        logger.print("\"ave-data-object-size\" :" + SimulationConfiguration.AVE_DATA_OBJECT_SIZE + ",\n");
         logger.print("\"interactive-job-probability\" :" + SimulationConfiguration.INTERAXTIVE_JOB_PROBABILITY + ",\n");
 
         logger.print("\"micro-data-center-num\" :" + SimulationConfiguration.MICRO_DATA_CENTER_NUM + ",\n");
@@ -83,6 +83,16 @@ public class AnalysisLogger {
         logger.print(
                 "\"load-cost-function-type\" :" + "\"" + SimulationConfiguration.LOAD_COST_FUNCTION_TYPE.toString()
                         + "\"" + ",\n");
+        logger.print("\"random-threshold\" :" + SimulationConfiguration.RANDOM_NETWORK_THRESHOLD + ",\n");
+        logger.print("\"load-cost-threshold\" :" + SimulationConfiguration.LOAD_COST_THRESHOLD + ",\n");
+        logger.print("\"network-cost-function-type\" :" + "\""
+                + SimulationConfiguration.NETWORK_COST_FUNCTION_TYPE.toString() + "\"" + ",\n");
+        logger.print("\"network-distance-threshold\" :" + SimulationConfiguration.NETWORK_DISTANCE_THRESHOLD + ",\n");
+        logger.print("\"pow-for-network\" :" + SimulationConfiguration.POW_FOR_NETWORK + ",\n");
+        logger.print("\"random-network-threshold\" :" + SimulationConfiguration.RANDOM_NETWORK_THRESHOLD + ",\n");
+        logger.print(
+                "\"cost-migrate-type\" :" + "\"" + SimulationConfiguration.COST_MIGRATE_TYPE.toString() + "\"" + ",\n");
+        logger.print("\"double-buffering\" :" + SimulationConfiguration.doubleBuffering + ",\n");
         logger.print("\"time-unit-num\" :" + SimulationConfiguration.TIME_UNIT_NUM + ",\n");
         logger.print("\"use-cost-dif-randomization\" :" + SimulationConfiguration.useCostDifRandomization + ",\n");
         logger.print("\"cost-gain-threshold\" :" + SimulationConfiguration.COST_GAIN_THRESHOLD + ",\n");

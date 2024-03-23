@@ -199,38 +199,58 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
 
     private void setConfigPanel() {
         configPanel.setLayout(new GridLayout(15, 15, 0, 0));
-        // configPanel.add(new JLabel("MAP_WIDTH: " + configData.getMapWidth()));
-        // configPanel.add(new JLabel("MAP_HEIGHT: " + configData.getMapHeight()));
+        configPanel.add(new JLabel("MAP_WIDTH: " + configData.getMapWidth()));
+        configPanel.add(new JLabel("MAP_HEIGHT: " + configData.getMapHeight()));
         configPanel.add(new JLabel("MICRO_DATA_CENTER_NUM: " + configData.getMicroDataCenterNum()));
         configPanel.add(new JLabel("DATA_CENTER_NUM: " + configData.getDataCenterNum()));
         configPanel.add(new JLabel("USER_NUM: " + configData.getUserNum()));
+        configPanel.add(new JLabel("IS_ROOP: " + configData.getIsRoop()));
+        configPanel.add(new JLabel("USER_SPAWN_SCENARIO: " + configData.getUserSpawnScenario()));
         configPanel.add(new JLabel("RANDOM_JOB_TIME_SLOT: " + configData.getRandomJobTimeSlot()));
-        configPanel.add(new JLabel("RANDOM_JOB_CONTAINER_NUM: " + configData.getRandomJobContainerNum()));
+        // configPanel.add(new JLabel("RANDOM_JOB_CONTAINER_NUM: " +
+        // configData.getRandomJobContainerNum()));
         configPanel.add(new JLabel("RANDOMIZE_RATE: " + configData.getRandomizeRate()));
         configPanel.add(new JLabel("AVE_JOB_TIME_SLOT: " + configData.getAveJobTimeSlot()));
-        configPanel.add(new JLabel("AVE_JOB_CONTAINER_NUM: " + configData.getAveJobContainerNum()));
+        // configPanel.add(new JLabel("AVE_JOB_CONTAINER_NUM: " +
+        // configData.getAveJobContainerNum()));
         configPanel.add(new JLabel("I_FRONT_WEIGHT: " + configData.getInteractiveFrontWeight()));
         configPanel.add(new JLabel("I_BACK_WEIGHT: " + configData.getInteractiveBackWeight()));
-        configPanel.add(new JLabel("DI_FRONT_WEIGHT: " + configData.getDataIncentiveFrontWeight()));
-        configPanel.add(new JLabel("DI_BACK_WEIGHT: " + configData.getDataIncentiveBackWeight()));
-        configPanel.add(new JLabel("DATA_OBJECT_TARGET_TYPE: " +
-                configData.getDataObjectTargetType()));
-        configPanel.add(new JLabel("AVE_MDC_CONTAINER_NUM: " + configData.getAveMDCContainerNum()));
-        configPanel.add(new JLabel("AVE_DC_CONTAINER_NUM: " + configData.getAveDCContainerNum()));
+        // configPanel.add(new JLabel("DI_FRONT_WEIGHT: " +
+        // configData.getDataIncentiveFrontWeight()));
+        // configPanel.add(new JLabel("DI_BACK_WEIGHT: " +
+        // configData.getDataIncentiveBackWeight()));
+        // configPanel.add(new JLabel("DATA_OBJECT_TARGET_TYPE: " +
+        // configData.getDataObjectTargetType()));
+        // configPanel.add(new JLabel("AVE_MDC_CONTAINER_NUM: " +
+        // configData.getAveMDCContainerNum()));
+        // configPanel.add(new JLabel("AVE_DC_CONTAINER_NUM: " +
+        // configData.getAveDCContainerNum()));
         configPanel.add(new JLabel("NODE_COST_WEIGHT_TYPE: " + configData.getNodeCostWeightType()));
-        configPanel.add(new JLabel("COST_DC_DC: " + configData.getCostDCDC()));
-        configPanel.add(new JLabel("COST_DC_MDC: " + configData.getCostDCMDC()));
-        configPanel.add(new JLabel("COST_MDC_USER: " + configData.getCostMDCUser()));
+        // configPanel.add(new JLabel("COST_DC_DC: " + configData.getCostDCDC()));
+        // configPanel.add(new JLabel("COST_DC_MDC: " + configData.getCostDCMDC()));
+        // configPanel.add(new JLabel("COST_MDC_USER: " + configData.getCostMDCUser()));
         configPanel.add(new JLabel("INTERACTIVE_JOB_PROBABILITY: " + configData.getInteractiveJobProbability()));
         // configPanel.add(new JLabel("RANDOM_NODE_LOCATION: " +
         // configData.getRandomNodeLocation()));
+        configPanel.add(new JLabel("NETWORK_TYPE: " + configData.getNetworkType()));
         configPanel.add(new JLabel("LOAD_COST_FUNCTION_TYPE: " + configData.getLoadCostFunctionType()));
-        configPanel.add(new JLabel("USER_SPAWN_SCENARIO: " + configData.getUserSpawnScenario()));
+        configPanel.add(new JLabel("LOAD_COST_THRESHOLD: " + configData.getLoadCostThreshold()));
+        configPanel.add(new JLabel("RANDOM_THRESHOLD: " + configData.getRandomThreshold()));
+        configPanel.add(new JLabel("NETWORK_COST_FUNCTION_TYPE: " + configData.getNetworkCostFunctionType()));
+        configPanel.add(new JLabel("POW_FOR_NETWORK: " + configData.getPowForNetwork()));
+        configPanel.add(new JLabel("NETWORK_DISTANCE_THRESHOLD: " + configData.getNetworkDistanceThreshold()));
+        configPanel.add(new JLabel("RANDOM_NETWORK_THRESHOLD: " + configData.getRandomNetworkThreshold()));
+
+        configPanel.add(new JLabel("COST_MIGRATE_TYPE: " + configData.getCostMigrateType()));
+        configPanel.add(new JLabel("doubleBuffering: " + configData.getDoubleBuffering()));
+
         configPanel.add(new JLabel("TIME_UNIT_NUM: " + configData.getTimeUnitNum()));
         configPanel.add(new JLabel("useCostDifRandomization: " + configData.getUseCostDifRandomization()));
-        configPanel.add(new JLabel("COST_GAIN_THRESHOLD: " + configData.getCostGainThreshold()));
+        // configPanel.add(new JLabel("COST_GAIN_THRESHOLD: " +
+        // configData.getCostGainThreshold()));
         configPanel.add(new JLabel("useMigTimeRandomization: " + configData.getUseMigTimeRandomization()));
-        configPanel.add(new JLabel("ELAPSED_TIME_THRESHOLD: " + configData.getElapsedTimeThreshold()));
+        // configPanel.add(new JLabel("ELAPSED_TIME_THRESHOLD: " +
+        // configData.getElapsedTimeThreshold()));
         configPanel.add(new JLabel("END_TIME: " + configData.getEndTime()));
     }
 

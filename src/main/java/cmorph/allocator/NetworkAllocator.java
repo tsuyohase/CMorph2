@@ -5,8 +5,9 @@ import static cmorph.settings.SimulationConfiguration.DATA_CENTER_NUM;
 import static cmorph.settings.SimulationConfiguration.MAP_HEIGHT;
 import static cmorph.settings.SimulationConfiguration.MAP_WIDTH;
 import static cmorph.settings.SimulationConfiguration.NETWORK_COST_FUNCTION_TYPE;
-import static cmorph.settings.SimulationConfiguration.NETWORK_DISTANCE_LIMIT;
+import static cmorph.settings.SimulationConfiguration.NETWORK_DISTANCE_THRESHOLD;
 import static cmorph.settings.SimulationConfiguration.NETWORK_TYPE;
+import static cmorph.settings.SimulationConfiguration.POW_FOR_NETWORK;
 import static cmorph.settings.SimulationConfiguration.TIME_UNIT_NUM;
 import static cmorph.settings.SimulationConfiguration.USER_NUM;
 
@@ -23,6 +24,15 @@ import cmorph.simulator.Timer;
 import cmorph.utils.Point;
 
 public class NetworkAllocator {
+    public static enum NetworkCostFunctionType {
+        CONVEX,
+        MONOTONIC,
+        CONSTANT,
+        BINARY,
+        MONOTONIC_BINARY,
+        POW
+    }
+
     // /**
     // * 各リンクの負荷を格納するリスト
     // */
@@ -63,7 +73,7 @@ public class NetworkAllocator {
         } else if (NETWORK_TYPE == networkType.WIRELESS) {
             Point srcPoint = Simulator.getSimulatedNodes().get(srcNodeId).getLocation();
             Point dstPoint = Simulator.getSimulatedNodes().get(dstNodeId).getLocation();
-            return getCostByDistance(srcPoint, dstPoint, NETWORK_DISTANCE_LIMIT);
+            return getCostByDistance(srcPoint, dstPoint, NETWORK_DISTANCE_THRESHOLD);
         } else {
             throw new Error("Network type is not defined");
         }
@@ -96,18 +106,21 @@ public class NetworkAllocator {
 
     private static double getCostByDistance(Point src, Point dst, double networkThreshold) {
         double distance = Math.sqrt(Math.pow(src.getX() - dst.getX(), 2) + Math.pow(src.getY() - dst.getY(), 2));
-        if (NETWORK_COST_FUNCTION_TYPE == PseudoCostFunctions.NetworkCostFunctionType.MONOTONIC) {
-            return PseudoCostFunctions.monotonicCostFunction(distance / NETWORK_DISTANCE_LIMIT);
-        } else if (NETWORK_COST_FUNCTION_TYPE == PseudoCostFunctions.NetworkCostFunctionType.CONVEX) {
-            return PseudoCostFunctions.convexPseudoCostFunction(distance / NETWORK_DISTANCE_LIMIT);
-        } else if (NETWORK_COST_FUNCTION_TYPE == PseudoCostFunctions.NetworkCostFunctionType.BINARY) {
-            return PseudoCostFunctions.getNetworkBinaryCost(distance / networkThreshold, networkThreshold);
-        } else if (NETWORK_COST_FUNCTION_TYPE == PseudoCostFunctions.NetworkCostFunctionType.MONOTONIC_BINARY) {
-            return PseudoCostFunctions.getNetworkMonotonicBinaryCost(distance, networkThreshold);
-        } else if (NETWORK_COST_FUNCTION_TYPE == PseudoCostFunctions.NetworkCostFunctionType.CONSTANT) {
-            return 1;
+        if (NETWORK_COST_FUNCTION_TYPE == NetworkCostFunctionType.MONOTONIC) {
+            return PseudoCostFunctions.monotonicCostFunction(Math.min(distance / networkThreshold, 1));
+        } else if (NETWORK_COST_FUNCTION_TYPE == NetworkCostFunctionType.CONVEX) {
+            return PseudoCostFunctions.convexPseudoCostFunction(Math.min(distance / networkThreshold, 1));
+        } else if (NETWORK_COST_FUNCTION_TYPE == NetworkCostFunctionType.BINARY) {
+            return PseudoCostFunctions.networkBinaryCostFunction(distance, networkThreshold);
+        } else if (NETWORK_COST_FUNCTION_TYPE == NetworkCostFunctionType.MONOTONIC_BINARY) {
+            return PseudoCostFunctions.networkMonotonicBinaryCost(distance, networkThreshold);
+        } else if (NETWORK_COST_FUNCTION_TYPE == NetworkCostFunctionType.CONSTANT) {
+            return 0;
+        } else if (NETWORK_COST_FUNCTION_TYPE == NetworkCostFunctionType.POW) {
+            return PseudoCostFunctions.networkPowCostFunction(distance, networkThreshold, POW_FOR_NETWORK);
         } else {
             throw new Error("Network cost function type is not defined");
+
         }
     }
 

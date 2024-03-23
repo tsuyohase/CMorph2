@@ -2,7 +2,10 @@ package cmorph.logger;
 
 import java.util.ArrayList;
 
-import cmorph.allocator.PseudoCostFunctions.LoadCostFunctionType;
+import cmorph.allocator.AllocationServer.CostMigrateType;
+import cmorph.allocator.NetworkAllocator.NetworkCostFunctionType;
+import cmorph.allocator.NetworkAllocator.networkType;
+import cmorph.allocator.NodeAllocator.LoadCostFunctionType;
 import cmorph.entities.Node;
 import cmorph.setUp.JobSetUp.DataObjectTargetType;
 import cmorph.setUp.NodeSetUp.NodeCostWeightType;
@@ -19,6 +22,7 @@ public class ConfigData {
     private int userNum;
     private UserLocationScenario userLocationScenario;
     private UserSpawnScenario userSpawnScenario;
+    private boolean isRoop;
 
     private boolean randomJobTimeSlot;
     private boolean randomJobContainerNum;
@@ -30,7 +34,7 @@ public class ConfigData {
     private int dataIncentiveFrontWeight;
     private int dataIncentiveBackWeight;
     private DataObjectTargetType dataObjectTargetType;
-    private int aveDataObjectSize;
+    // private int aveDataObjectSize;
     private double interactiveJobProbability;
 
     private int microDataCenterNum;
@@ -43,8 +47,19 @@ public class ConfigData {
     private int costDCMDC;
     private int costDCDC;
     private int costMDCUser;
+    private networkType networkType;
 
     private LoadCostFunctionType loadCostFunctionType;
+    private double loadCostThreshold;
+    private boolean randomThreshold;
+    private NetworkCostFunctionType networkCostFunctionType;
+    private int powForNetwork;
+    private double networkDistanceThreshold;
+    private boolean randomNetworkThreshold;
+
+    private CostMigrateType costMigrateType;
+
+    private boolean doubleBuffering;
     private int timeUnitNum;
     private boolean useCostDifRandomization;
     private double costGainThreshold;
@@ -68,9 +83,12 @@ public class ConfigData {
     public ConfigData(ArrayList<Node> nodes) {
         this.mapWidth = SimulationConfiguration.MAP_WIDTH;
         this.mapHeight = SimulationConfiguration.MAP_HEIGHT;
+
         this.userNum = SimulationConfiguration.USER_NUM;
         this.userLocationScenario = SimulationConfiguration.USER_LOCATION_SCENARIO;
         this.userSpawnScenario = SimulationConfiguration.USER_SPAWN_SCENARIO;
+        this.isRoop = SimulationConfiguration.IS_ROOP;
+
         this.randomJobTimeSlot = SimulationConfiguration.RANDOM_JOB_TIME_SLOT;
         this.randomJobContainerNum = SimulationConfiguration.RANDOM_JOB_CONTAINER_NUM;
         this.randomizeRate = SimulationConfiguration.RANDOMIZE_RATE;
@@ -80,7 +98,6 @@ public class ConfigData {
         this.interactiveBackWeight = SimulationConfiguration.INTERACTIVE_BACK_WEIGHT;
         this.dataIncentiveFrontWeight = SimulationConfiguration.DATA_INCENTIVE_BACK_WEIGHT;
         this.dataIncentiveBackWeight = SimulationConfiguration.DATA_INCENTIVE_FRONT_WEIGHT;
-        this.aveDataObjectSize = SimulationConfiguration.AVE_DATA_OBJECT_SIZE;
         this.interactiveJobProbability = SimulationConfiguration.INTERAXTIVE_JOB_PROBABILITY;
 
         this.microDataCenterNum = SimulationConfiguration.MICRO_DATA_CENTER_NUM;
@@ -93,8 +110,19 @@ public class ConfigData {
         this.costDCDC = SimulationConfiguration.COST_DC_DC;
         this.costDCMDC = SimulationConfiguration.COST_DC_MDC;
         this.costMDCUser = SimulationConfiguration.COST_MDC_USER;
+        this.networkType = SimulationConfiguration.NETWORK_TYPE;
 
         this.loadCostFunctionType = SimulationConfiguration.LOAD_COST_FUNCTION_TYPE;
+        this.loadCostThreshold = SimulationConfiguration.LOAD_COST_THRESHOLD;
+        this.randomThreshold = SimulationConfiguration.RANDOM_THRETHOLD;
+        this.networkCostFunctionType = SimulationConfiguration.NETWORK_COST_FUNCTION_TYPE;
+        this.powForNetwork = SimulationConfiguration.POW_FOR_NETWORK;
+        this.networkDistanceThreshold = SimulationConfiguration.NETWORK_DISTANCE_THRESHOLD;
+        this.randomNetworkThreshold = SimulationConfiguration.RANDOM_NETWORK_THRESHOLD;
+
+        this.costMigrateType = SimulationConfiguration.COST_MIGRATE_TYPE;
+
+        this.doubleBuffering = SimulationConfiguration.doubleBuffering;
         this.timeUnitNum = SimulationConfiguration.TIME_UNIT_NUM;
         this.useCostDifRandomization = SimulationConfiguration.useCostDifRandomization;
         this.costGainThreshold = SimulationConfiguration.COST_GAIN_THRESHOLD;
@@ -137,6 +165,10 @@ public class ConfigData {
 
     public UserLocationScenario getUserLocationScenario() {
         return userLocationScenario;
+    }
+
+    public boolean getIsRoop() {
+        return isRoop;
     }
 
     public UserSpawnScenario getUserSpawnScenario() {
@@ -183,10 +215,6 @@ public class ConfigData {
         return dataObjectTargetType;
     }
 
-    public int getAveDataObjectSize() {
-        return aveDataObjectSize;
-    }
-
     public double getInteractiveJobProbability() {
         return interactiveJobProbability;
     }
@@ -205,6 +233,10 @@ public class ConfigData {
 
     public int getCostMDCUser() {
         return costMDCUser;
+    }
+
+    public networkType getNetworkType() {
+        return networkType;
     }
 
     public int getDataCenterNum() {
@@ -229,6 +261,38 @@ public class ConfigData {
 
     public LoadCostFunctionType getLoadCostFunctionType() {
         return loadCostFunctionType;
+    }
+
+    public double getLoadCostThreshold() {
+        return loadCostThreshold;
+    }
+
+    public boolean getRandomThreshold() {
+        return randomThreshold;
+    }
+
+    public NetworkCostFunctionType getNetworkCostFunctionType() {
+        return networkCostFunctionType;
+    }
+
+    public int getPowForNetwork() {
+        return powForNetwork;
+    }
+
+    public double getNetworkDistanceThreshold() {
+        return networkDistanceThreshold;
+    }
+
+    public boolean getRandomNetworkThreshold() {
+        return randomNetworkThreshold;
+    }
+
+    public CostMigrateType getCostMigrateType() {
+        return costMigrateType;
+    }
+
+    public boolean getDoubleBuffering() {
+        return doubleBuffering;
     }
 
     public int getTimeUnitNum() {
