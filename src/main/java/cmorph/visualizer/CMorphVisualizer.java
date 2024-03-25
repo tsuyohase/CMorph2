@@ -18,6 +18,7 @@ import cmorph.logger.TimeStepData;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 
 public class CMorphVisualizer extends JFrame implements ActionListener, ChangeListener {
     ObjectMapper mapper = new ObjectMapper();
@@ -190,7 +191,8 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
         File folder = new File(this.folderPath);
 
         if (folder.exists() && folder.isDirectory()) {
-            List<String> fileList = Arrays.asList(folder.list());
+            LinkedList<String> fileList = new LinkedList(Arrays.asList(folder.list()));
+            fileList.removeIf(fileName -> !fileName.contains("json"));
             this.outputFileNames = fileList;
         } else {
             System.out.println("folder not found");

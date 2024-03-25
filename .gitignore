@@ -1,4 +1,10 @@
 .gradle/
 build/
-src/dist/output/
+src/dist/output/*
+!src/dist/output/analysis/
+src/dist/output/analysis/*
+!src/dist/output/analysis/.gitkeep
+!src/dist/output/visualize/
+src/dist/output/visualize/*
+!src/dist/output/visualize/.gitkeep
 .vscode/
