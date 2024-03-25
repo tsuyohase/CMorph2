@@ -67,6 +67,23 @@ public class User {
         return connectNodeId;
     }
 
+    public double getConnectDistance(long time) {
+        double distance = -1;
+        for (Map.Entry<Long, Integer> entry : this.connectNodeMap.entrySet()) {
+            if (entry.getKey() <= time) {
+                connectNodeId = entry.getValue();
+                Point connectedLocation = this.getCurrentLocation(entry.getKey());
+                Point connectNodeLocation = Simulator.getSimulatedNodes().get(connectNodeId).getLocation();
+                if (this.isActive(time)) {
+                    distance = connectedLocation.getDistance(connectNodeLocation);
+                }
+            } else {
+                break;
+            }
+        }
+        return distance;
+    }
+
     public void removeEndConnectNode(long time) {
         ArrayList<Long> removeKeyList = new ArrayList<Long>();
         for (Map.Entry<Long, Integer> entry : this.connectNodeMap.entrySet()) {

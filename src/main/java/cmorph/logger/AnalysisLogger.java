@@ -167,12 +167,7 @@ public class AnalysisLogger {
             Point userPosition = user.getScenario().apply(time);
             userX.add(userPosition.getX());
             userY.add(userPosition.getY());
-            double distance = 0;
-            if (user.isActive(time)) {
-                distance = userPosition
-                        .getDistance(Simulator.getSimulatedNodes().get(user.getConnectNodeId(time)).getLocation());
-            }
-            userConnectionDistance.add(distance);
+            userConnectionDistance.add(user.getConnectDistance(time));
         }
 
         nodeLoadList.add(nodeLoad);
