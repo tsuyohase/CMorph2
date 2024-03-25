@@ -21,7 +21,7 @@ public class SimulationConfiguration {
 
         // User
         public static final int USER_NUM = 160;
-        public static final UserLocationScenario USER_LOCATION_SCENARIO = UserLocationScenario.RANDOM_DOWN;
+        public static final UserLocationScenario USER_LOCATION_SCENARIO = UserLocationScenario.LEFT_RANDOM_DOWN;
         public static final UserSpawnScenario USER_SPAWN_SCENARIO = UserSpawnScenario.BEGINNING;
         public static final boolean IS_ROOP = true;
 
@@ -42,7 +42,7 @@ public class SimulationConfiguration {
         // Node
         public static final int MICRO_DATA_CENTER_NUM = 0;
         public static final int DATA_CENTER_NUM = 16;
-        public static final double TOTAL_LOAD_RATE = 0.2;
+        public static final double TOTAL_LOAD_RATE = 0.5;
         public static final double DC_MDC_RATE = 3;
         public static final int AVE_MDC_CONTAINER_NUM = (int) (USER_NUM * AVE_JOB_CONTAINER_NUM
                         / TOTAL_LOAD_RATE

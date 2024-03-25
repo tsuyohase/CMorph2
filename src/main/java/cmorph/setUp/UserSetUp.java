@@ -36,6 +36,7 @@ public class UserSetUp {
         RANDOM_LOCATION_SATY,
         STRAIGHT_DOWN,
         RANDOM_DOWN,
+        LEFT_RANDOM_DOWN,
         RANDOM,
         TRANSIT_STUB,
     }
@@ -160,6 +161,12 @@ public class UserSetUp {
             // 下に一直線に移動するシナリオ
             return randomDownScenario(initPoint, spawnTime, despawnTime);
 
+        } else if (USER_LOCATION_SCENARIO == UserLocationScenario.LEFT_RANDOM_DOWN) {
+            // 左側1/4にランダムに配置
+            initPoint = new Point(random.nextDouble() * MAP_WIDTH / 4, random.nextDouble() * MAP_WIDTH);
+
+            // 下に一直線に移動するシナリオ
+            return randomDownScenario(initPoint, spawnTime, despawnTime);
         } else if (USER_LOCATION_SCENARIO == UserLocationScenario.RANDOM) {
             // ランダムに配置
             initPoint = new Point(Math.random() * MAP_WIDTH, Math.random() * MAP_WIDTH);

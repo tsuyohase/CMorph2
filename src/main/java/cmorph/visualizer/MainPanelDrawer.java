@@ -133,9 +133,8 @@ public class MainPanelDrawer extends Thread {
         return (int) (0.9 * point * bufferedImage.getWidth() / MAP_WIDTH + bufferedImage.getHeight() * 0.05);
     }
 
-    private void drawDotLine(int startX, int startY, int endX, int endY) {
-        threadGraphics.setColor(Color.GRAY);
-        threadGraphics.setStroke(new BasicStroke(1));
+    private void drawDotLine(int startX, int startY, int endX, int endY, int lineWidth) {
+        threadGraphics.setStroke(new BasicStroke(lineWidth));
         int lineLength = 5;
         double distX = endX - startX;
         double distY = endY - startY;
@@ -157,6 +156,7 @@ public class MainPanelDrawer extends Thread {
             y = nextY;
         }
         threadGraphics.drawLine((int) x, (int) y, endX, endY);
+        threadGraphics.setStroke(new BasicStroke(1));
     }
 
     private void draw() {
@@ -213,9 +213,17 @@ public class MainPanelDrawer extends Thread {
                     && userState.getY() <= MAP_HEIGHT) {
                 if (isLink) {
                     int connectedNodeId = userState.getConnectedNodeId();
+                    double distance = userState.getConnectedDistance();
+                    int lineWidth = 1;
+                    if (distance > configData.getNetworkDistanceThreshold()) {
+                        threadGraphics.setColor(Color.RED);
+                        lineWidth = 3;
+                    } else {
+                        threadGraphics.setColor(Color.BLUE);
+                    }
                     drawDotLine(userX + userSize / 2, userY + userSize / 2,
                             convertPoint(configData.getNodeXList().get(connectedNodeId)),
-                            convertPoint(configData.getNodeYList().get(connectedNodeId)));
+                            convertPoint(configData.getNodeYList().get(connectedNodeId)), lineWidth);
                 }
 
                 if (userState.getUserType() == UserType.INTERACTIVE) {
