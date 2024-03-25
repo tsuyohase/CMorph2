@@ -140,7 +140,7 @@ public class AnalysisLogger {
         logger.print("\"node-load-list\" :" + nodeLoadList + ",\n");
         // logger.print("\"user-x-list\" :" + userXList + ",\n");
         // logger.print("\"user-y-list\" :" + userYList + ",\n");
-        // logger.print("\"user-connection-list\" :" + userConnectionList);
+        logger.print("\"user-connection-list\" :" + userConnectionList + ",\n");
         logger.print("\"user-connection-distance-list\" :" + userConnectionDistanceList);
     }
 
