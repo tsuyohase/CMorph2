@@ -158,8 +158,8 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() == speedSlider) {
             JSlider source = (JSlider) e.getSource();
-            this.speed = source.getValue();
-            speedLabel.setText("speed: " + this.speed);
+            this.speed = (int) Math.pow(2, source.getValue() - 1);
+            speedLabel.setText("speed: " + source.getValue());
         } else if (e.getSource() == slider) {
             JSlider source = (JSlider) e.getSource();
             this.currentTime = source.getValue();
@@ -268,7 +268,7 @@ public class CMorphVisualizer extends JFrame implements ActionListener, ChangeLi
 
         slider.addChangeListener(this);
 
-        speedSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 1);
+        speedSlider = new JSlider(JSlider.HORIZONTAL, 1, 10, 1);
         slider.setMajorTickSpacing(1);
         speedLabel = new JLabel("speed: 1");
         speedSlider.addChangeListener(this);
