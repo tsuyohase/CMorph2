@@ -69,6 +69,7 @@ public class AnalysisLogger {
 
         logger.print("\"micro-data-center-num\" :" + SimulationConfiguration.MICRO_DATA_CENTER_NUM + ",\n");
         logger.print("\"data-center-num\" :" + SimulationConfiguration.DATA_CENTER_NUM + ",\n");
+        logger.print("\"total-load-rate\" :" + SimulationConfiguration.TOTAL_LOAD_RATE + ",\n");
         logger.print("\"ave-mdc-container-num\" :" + SimulationConfiguration.AVE_MDC_CONTAINER_NUM + ",\n");
         logger.print("\"ave-dc-container-num\" :" + SimulationConfiguration.AVE_DC_CONTAINER_NUM + ",\n");
         logger.print("\"random-dc-location\" :" + SimulationConfiguration.RANDOM_DC_LOCATION + ",\n");
