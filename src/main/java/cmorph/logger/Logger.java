@@ -18,19 +18,26 @@ public class Logger {
 
     private static long lastAddedTime = 0;
     private static SimulationData simulationData = new SimulationData();
+    private static String filePath;
 
     public static void log() {
         OutputData outputData = getOutputData();
         saveOutputFile(outputData);
     }
 
-    private static void saveOutputFile(OutputData outputData) {
-        LocalDateTime nowDate = LocalDateTime.now();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        String formatNowDate = dtf.format(nowDate);
-        String fileName = "output-" + formatNowDate + ".json";
-        String filePath = "src/dist/output/visualize/" + fileName;
+    public static void setFilePath(String fileName) {
+        filePath = "src/dist/output/visualize/" + fileName;
+    }
 
+    // private static void setFilePath() {
+    // LocalDateTime nowDate = LocalDateTime.now();
+    // DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+    // String formatNowDate = dtf.format(nowDate);
+    // String fileName = "output-" + formatNowDate + ".json";
+    // filePath = "src/dist/output/visualize/" + fileName;
+    // }
+
+    private static void saveOutputFile(OutputData outputData) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             objectMapper.writeValue(new File(filePath), outputData);

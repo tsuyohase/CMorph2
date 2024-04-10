@@ -37,6 +37,7 @@ public class UserSetUp {
         STRAIGHT_DOWN,
         RANDOM_DOWN,
         LEFT_RANDOM_DOWN,
+        CENTER_LEFT_RANDOM_DOWN,
         RANDOM,
         TRANSIT_STUB,
     }
@@ -167,6 +168,13 @@ public class UserSetUp {
 
             // 下に一直線に移動するシナリオ
             return randomDownScenario(initPoint, spawnTime, despawnTime);
+        } else if (USER_LOCATION_SCENARIO == UserLocationScenario.CENTER_LEFT_RANDOM_DOWN) {
+            // 左側3/10-5/10にランダムに配置
+            initPoint = new Point((0.3 + 0.2 * random.nextDouble()) * MAP_WIDTH, random.nextDouble() * MAP_WIDTH / 2);
+
+            // 下に一直線に移動するシナリオ
+            return randomDownScenario(initPoint, spawnTime, despawnTime);
+
         } else if (USER_LOCATION_SCENARIO == UserLocationScenario.RANDOM) {
             // ランダムに配置
             initPoint = new Point(Math.random() * MAP_WIDTH, Math.random() * MAP_WIDTH);
@@ -272,7 +280,8 @@ public class UserSetUp {
         if (IS_ROOP) {
             double x = point.getX();
             double y = point.getY();
-            double buffer = MAP_HEIGHT / 3;
+            // double buffer = MAP_HEIGHT / 3;
+            double buffer = 0;
             x = (x + (MAP_WIDTH + buffer) * 1000) % (MAP_WIDTH + buffer);
             y = (y + (MAP_HEIGHT + buffer) * 1000) % (MAP_HEIGHT + buffer);
 

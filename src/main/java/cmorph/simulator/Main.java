@@ -4,6 +4,7 @@ import cmorph.logger.AnalysisLogger;
 import cmorph.logger.Logger;
 import cmorph.logger.OutputData;
 import cmorph.setUp.SetUp;
+import cmorph.settings.SimulationConfiguration;
 import cmorph.utils.BasicLogger;
 
 import java.io.File;
@@ -17,11 +18,8 @@ public class Main {
 
     static BasicLogger logger = BasicLogger.getLogger("cmorph.analysis");
 
-    private static void setupLogger() {
-        LocalDateTime nowDate = LocalDateTime.now();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        String formatNowDate = dtf.format(nowDate);
-        String fileName = "output-" + formatNowDate + ".json";
+    private static void setupLogger(String fileName) {
+        Logger.setFilePath(fileName);
         String filePath = "src/dist/output/analysis/" + fileName;
         try {
             logger.setFileWriter(new File(filePath));
@@ -36,7 +34,9 @@ public class Main {
      * @param args
      */
     public static void main(String[] args) {
-        setupLogger();
+
+        String fileName = SimulationConfiguration.parseOption(args);
+        setupLogger(fileName);
         AnalysisLogger.initLog();
         AnalysisLogger.addConfigData();
 
