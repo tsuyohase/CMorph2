@@ -3,7 +3,8 @@
 scenarios=("random" "centerLeft")
 totalLoads=("0.2" "0.4" "0.6" "0.8")
 serverFuncs=("monotonic" "convex" "constant")
-networkFuncs=("constant" "pow 1" "pow 4")
+# networkFuncs=("constant" "pow 1" "pow 4")
+networkFuncs=("pow 8")
 
 
 for scenario in "${scenarios[@]}"

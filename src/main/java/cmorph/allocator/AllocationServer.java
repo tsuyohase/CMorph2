@@ -66,6 +66,7 @@ public class AllocationServer {
         double bestCost = Double.MAX_VALUE;
         int bestNode = -1;
         ArrayList<Node> simulatedNodes = Simulator.getSimulatedNodes();
+        ArrayList<Integer> sameCostNodes = new ArrayList<Integer>();
 
         for (int i = 0; i < simulatedNodes.size(); i++) {
 
@@ -76,9 +77,16 @@ public class AllocationServer {
                 if (cost < bestCost) {
                     bestCost = cost;
                     bestNode = i;
+                    sameCostNodes.clear();
+                }
+                if (cost == bestCost) {
+                    sameCostNodes.add(i);
                 }
 
             }
+        }
+        if (sameCostNodes.size() > 0) {
+            bestNode = sameCostNodes.get(random.nextInt(sameCostNodes.size()));
         }
 
         // ジョブを転送

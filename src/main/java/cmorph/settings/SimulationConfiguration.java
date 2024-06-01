@@ -24,7 +24,8 @@ public class SimulationConfiguration {
 
         // User
         public static final int USER_NUM = 160;
-        public static UserLocationScenario USER_LOCATION_SCENARIO = UserLocationScenario.CENTER_LEFT_RANDOM_DOWN;
+        // public static final int USER_NUM = 64;
+        public static UserLocationScenario USER_LOCATION_SCENARIO = UserLocationScenario.RANDOM_DOWN;
         public static final UserSpawnScenario USER_SPAWN_SCENARIO = UserSpawnScenario.BEGINNING;
         public static final boolean IS_ROOP = true;
 
@@ -67,7 +68,7 @@ public class SimulationConfiguration {
         public static LoadCostFunctionType LOAD_COST_FUNCTION_TYPE = LoadCostFunctionType.CONVEX;
         public static final boolean RANDOM_THRETHOLD = false;
         public static final double LOAD_COST_THRESHOLD = 0.75;
-        public static NetworkCostFunctionType NETWORK_COST_FUNCTION_TYPE = NetworkCostFunctionType.POW;
+        public static NetworkCostFunctionType NETWORK_COST_FUNCTION_TYPE = NetworkCostFunctionType.CONSTANT;
         public static int POW_FOR_NETWORK = 4;
         public static final double NETWORK_DISTANCE_THRESHOLD = 2 * MAP_WIDTH / (Math.sqrt(DATA_CENTER_NUM) + 1);
         public static final boolean RANDOM_NETWORK_THRESHOLD = false;

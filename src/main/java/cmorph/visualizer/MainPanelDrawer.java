@@ -52,7 +52,8 @@ public class MainPanelDrawer extends Thread {
         nodeSizeBase = Math.max(
                 bufferedImage.getWidth() / ((configData.getDataCenterNum() + configData.getMicroDataCenterNum()) * 4),
                 15);
-        userSize = Math.max(bufferedImage.getWidth() / configData.getUserNum(), 5);
+        // userSize = Math.max(bufferedImage.getWidth() / configData.getUserNum(), 5);
+        userSize = 5;
         this.isLink = isLink;
 
     }
@@ -96,19 +97,26 @@ public class MainPanelDrawer extends Thread {
         if (load == 0) {
             return new Color(gray_r, gray_g, gray_b);
         } else if (load < 0.25) {
-            return new Color(green_r, green_g, green_b);
+            // return new Color(green_r, green_g, green_b);
+            return new Color(gray_r, gray_g, gray_b);
         } else if (load < 0.5) {
             double r = (load - 0.25) / 0.25;
-            return new Color((int) (green_r * (1 - r) + r * blue_r), (int) (green_g * (1 - r) + blue_g * r),
-                    (int) (green_b * (1 - r) + blue_b * r));
+            // return new Color((int) (green_r * (1 - r) + r * blue_r), (int) (green_g * (1
+            // - r) + blue_g * r),
+            // (int) (green_b * (1 - r) + blue_b * r));
+            return new Color(gray_r, gray_g, gray_b);
         } else if (load < 0.75) {
             double r = (load - 0.5) / 0.25;
-            return new Color((int) (blue_r * (1 - r) + r * red_r), (int) (blue_g * (1 - r) + red_g * r),
-                    (int) (blue_b * (1 - r) + red_b * r));
+            // return new Color((int) (blue_r * (1 - r) + r * red_r), (int) (blue_g * (1 -
+            // r) + red_g * r),
+            // (int) (blue_b * (1 - r) + red_b * r));
+            return new Color(gray_r, gray_g, gray_b);
         } else {
             double r = (load - 0.75) / 0.25;
-            return new Color((int) (red_r * (1 - r) + r * dred_r), (int) (red_g * (1 - r) + dred_g * r),
-                    (int) (red_b * (1 - r) + dred_b * r));
+            // return new Color((int) (red_r * (1 - r) + r * dred_r), (int) (red_g * (1 - r)
+            // + dred_g * r),
+            // (int) (red_b * (1 - r) + dred_b * r));
+            return new Color(gray_r, gray_g, gray_b);
         }
     }
 

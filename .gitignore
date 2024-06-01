@@ -8,3 +8,5 @@ src/dist/output/analysis/*
 src/dist/output/visualize/*
 !src/dist/output/visualize/.gitkeep
 .vscode/
+demo/scenario
+get_scenario/positions
