@@ -1,0 +1,30 @@
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'eclipse'
+
+task simulator(type: JavaExec) {
+    main = 'cmorph.simulator.Main'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task visualizer(type: JavaExec) {
+    main = 'cmorph.visualizer.CMorphVisualizer'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+repositories { 
+    mavenCentral() 
+}
+
+jar {
+    archiveBaseName = 'gs-gradle'
+    archiveVersion =  '0.1.0'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.15.2'
+}

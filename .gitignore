@@ -11,3 +11,4 @@ src/dist/output/visualize/*
 demo/scenario
 get_scenario/positions
 analysis/img/*
+src/dist/get_scenario/positions/*
